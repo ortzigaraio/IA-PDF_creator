@@ -1,0 +1,17 @@
+# Variables de entorno
+.env
+
+# Entornos virtuales r
+entorno_prisma/
+venv/
+__pycache__/
+*.pyc
+
+# Salidas de reportes y Excel
+Salida_Excel/
+Salida_PDF/
+*.png
+temp_*.png
+
+# Playwright / Browsers locales
+.playwright/

@@ -1,0 +1,86 @@
+{
+  "empresas": {
+    "google": {
+      "nombre": "Google",
+      "sector": "People Operations • Googlyness & Tech Eval",
+      "pesos_perfil_objetivo": {
+        "adaptabilidad": 9,
+        "comunicación": 8,
+        "creatividad": 10,
+        "disciplina": 7,
+        "empatía": 8,
+        "iniciativa": 9,
+        "resiliencia": 8
+      },
+      "plantilla": {
+        "color_primario": "#4285F4",
+        "color_secundario": "#34A853",
+        "color_acento": "#FBBC05",
+        "logo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_2015_logo.svg/1200px-Google_2015_logo.svg.png",
+        "fuente_principal": "Product Sans"
+      },
+      "clientes": [
+        {
+          "usuario_id": "GGL-01",
+          "nombre": "Sundar P.",
+          "dimensiones": {
+            "adaptabilidad": 95, "comunicación": 90, "creatividad": 85,
+            "disciplina": 90, "empatía": 82, "iniciativa": 85, "resiliencia": 90
+          },
+          "frases_predeterminadas": [
+            "Demuestra un fantástico nivel de 'Googlyness' conduciendo la transición de la empresa a AI-first.",
+            "Debe continuar priorizando el bienestar del equipo y fomentar los debates abiertos constructivos."
+          ]
+        },
+        {
+          "usuario_id": "GGL-02",
+          "nombre": "Ruth Porat",
+          "dimensiones": {
+            "adaptabilidad": 80, "comunicación": 85, "creatividad": 70,
+            "disciplina": 100, "empatía": 75, "iniciativa": 80, "resiliencia": 95
+          },
+          "frases_predeterminadas": [
+            "Mantiene los OKRs financieros de Alphabet con una disciplina ejecutiva y rigor excepcionales.",
+            "Requiere flexibilizar asignacion de recursos iterativos para acelerar moonshots de X."
+          ]
+        },
+        {
+          "usuario_id": "GGL-03",
+          "nombre": "Jeff Dean",
+          "dimensiones": {
+            "adaptabilidad": 90, "comunicación": 80, "creatividad": 100,
+            "disciplina": 85, "empatía": 85, "iniciativa": 100, "resiliencia": 95
+          },
+          "frases_predeterminadas": [
+            "Innovación técnica inigualable; representa el núcleo duro histórico de la ingeniería open-source.",
+            "Imprescindible enfocarse en delegar la arquitectura escalar a líderes emergentes de DeepMind."
+          ]
+        },
+        {
+          "usuario_id": "GGL-04",
+          "nombre": "Elena R. PM",
+          "dimensiones": {
+            "adaptabilidad": 95, "comunicación": 95, "creatividad": 80,
+            "disciplina": 70, "empatía": 90, "iniciativa": 85, "resiliencia": 80
+          },
+          "frases_predeterminadas": [
+            "Excelente Senior Product Manager en Google Workspace, utiliza insights de datos con total maestría.",
+            "Su '20% time project' tiene alto impacto, requiere escalarlo a un feature de la rama principal de software."
+          ]
+        },
+        {
+          "usuario_id": "GGL-05",
+          "nombre": "Carlos M.",
+          "dimensiones": {
+            "adaptabilidad": 60, "comunicación": 75, "creatividad": 85,
+            "disciplina": 65, "empatía": 60, "iniciativa": 70, "resiliencia": 60
+          },
+          "frases_predeterminadas": [
+            "Alta capacidad y estética en el desarrollo de frontend UI usando el ecosistema Material You.",
+            "Carece de resiliencia frente a cambios repentinos y le cuesta integrar el feedback exigente 'peer-to-peer'."
+          ]
+        }
+      ]
+    }
+  }
+}

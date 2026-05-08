@@ -1,0 +1,373 @@
+{
+  "metadata": {
+    "version": "2.0",
+    "ultima_actualizacion": "2025-03-24",
+    "descripcion": "Diccionario de perfiles y frases dinámicas para PrismaHR v2.0 con IA decisional",
+    "autor": "Equipo PrismaHR",
+    "nota": "Este JSON actúa como base de conocimiento para decisiones automáticas y generación de contenido"
+  },
+  "perfiles": {
+    "analítico": {
+      "id": "analítico",
+      "nombre": "Perfil Analítico",
+      "descripcion": "Usuario que sobresale en análisis profundo, estructuración de información y atención al detalle. Prefiere procesos definidos y datos sobre intuición.",
+      "icono": "📊",
+      "pesos_clasificacion": {
+        "atención_detalle": 0.70,
+        "adaptabilidad": 0.10,
+        "trabajo_equipo": 0.10,
+        "tolerancia_estrés": 0.05,
+        "liderazgo": 0.05
+      },
+      "rango_score_optimo": [
+        70,
+        90
+      ],
+      "frases_contextuales": {
+        "fortaleza_principal": "Análisis profundo y estructurado de información compleja",
+        "area_desarrollo": "Adaptabilidad en entornos de cambio rápido",
+        "estilo_trabajo": "Prefiere procesos definidos, análisis exhaustivo antes de la acción",
+        "recomendacion_rrhh": "Ideal para roles analíticos, BI, especialización técnica, auditoría",
+        "tipo_proyecto": "Proyectos data-driven, estructurados, con métricas claras",
+        "ambiente_ideal": "Equipos con jerarquía clara, procesos documentados"
+      },
+      "planes_accion": {
+        "promotion": {
+          "titulo": "Senior Analyst o Lead Técnico",
+          "descripcion": "Crear rol de especialización profunda donde pueda establecer estándares",
+          "pasos": [
+            "Mentoría en liderazgo técnico y comunicación con ejecutivos",
+            "Responsabilidad de proyectos estratégicos de análisis",
+            "Desarrollo de metodologías de análisis propias"
+          ],
+          "duracion": "6-9 meses"
+        },
+        "training": {
+          "titulo": "Liderazgo Adaptativo",
+          "descripcion": "Ampliar capacidad de decisión rápida sin compromiso de análisis",
+          "pasos": [
+            "Programa de toma de decisiones en incertidumbre",
+            "Coaching en gestión del cambio organizacional",
+            "Talleres de pensamiento estratégico flexible"
+          ],
+          "duracion": "3-4 meses",
+          "plataformas": [
+            "LinkedIn Learning",
+            "Coursera"
+          ]
+        },
+        "consolidation": {
+          "titulo": "Especialización Técnica",
+          "descripcion": "Profundizar en área de expertise actual",
+          "pasos": [
+            "Certificaciones en área de especialidad",
+            "Mentorías en toma de decisión rápida",
+            "Proyectos de mejora continua"
+          ],
+          "duracion": "3 meses"
+        },
+        "improvement": {
+          "titulo": "Plan de Mejora Inmediato",
+          "descripcion": "Desarrollar competencias transversales críticas",
+          "pasos": [
+            "Coaching individual en gestión del estrés",
+            "Programa de mentoría activa (bi-semanal)",
+            "Asignación a proyectos con supervisión cercana"
+          ],
+          "duracion": "2 meses, revisión mensual"
+        }
+      }
+    },
+    "dinamico": {
+      "id": "dinamico",
+      "nombre": "Perfil Dinámico",
+      "descripcion": "Usuario versátil y adaptable a distintos contextos. Excelente en situaciones de cambio, pragmático y orientado a resultados.",
+      "icono": "⚡",
+      "pesos_clasificacion": {
+        "atención_detalle": 0.15,
+        "adaptabilidad": 0.60,
+        "trabajo_equipo": 0.15,
+        "tolerancia_estrés": 0.05,
+        "liderazgo": 0.05
+      },
+      "rango_score_optimo": [
+        65,
+        85
+      ],
+      "frases_contextuales": {
+        "fortaleza_principal": "Capacidad de adaptación ágil a cambios y nuevos desafíos",
+        "area_desarrollo": "Profundidad analítica en decisiones complejas",
+        "estilo_trabajo": "Orientado a soluciones pragmáticas, resultados rápidos, manejo de ambigüedad",
+        "recomendacion_rrhh": "Ideal para gestión, consultoría, proyectos ágiles, transformación digital",
+        "tipo_proyecto": "Proyectos ágiles, startups, transformación, proyectos cross-funcionales",
+        "ambiente_ideal": "Equipos ágiles, cambio continuo, empowerment, autonomía"
+      },
+      "planes_accion": {
+        "promotion": {
+          "titulo": "Liderazgo Multi-funcional",
+          "descripcion": "Oportunidades de liderazgo en contextos complejos y dinámicos",
+          "pasos": [
+            "Desarrollo de MBA ejecutivo o similar",
+            "Liderazgo de iniciativas de transformación",
+            "Mentoría de equipos en ambientes ágiles"
+          ],
+          "duracion": "6-12 meses"
+        },
+        "training": {
+          "titulo": "Análisis Estratégico Profundo",
+          "descripcion": "Desarrollar capacidad de análisis más estructurado",
+          "pasos": [
+            "Curso de pensamiento estratégico",
+            "Programa de análisis de datos",
+            "Seminarios de business intelligence"
+          ],
+          "duracion": "3 meses"
+        },
+        "consolidation": {
+          "titulo": "Gestión de Proyectos Complejos",
+          "descripcion": "Ampliar experiencia en contextos de mayor complejidad",
+          "pasos": [
+            "Certificación PMP o Scrum Master avanzado",
+            "Proyectos de integración organizacional",
+            "Mentoría en metodologías ágiles"
+          ],
+          "duracion": "3 meses"
+        },
+        "improvement": {
+          "titulo": "Bases Técnicas y Estratégicas",
+          "descripcion": "Fortalecer fundamentos de análisis y planificación",
+          "pasos": [
+            "Capacitación en análisis de procesos",
+            "Entrenamiento en toma de decisiones informadas",
+            "Coaching en profundidad analítica"
+          ],
+          "duracion": "2 meses"
+        }
+      }
+    },
+    "colaborador": {
+      "id": "colaborador",
+      "nombre": "Perfil Colaborador",
+      "descripcion": "Usuario enfocado en el trabajo en equipo, relaciones interpersonales y comunicación. Excelente en ambientes colaborativos.",
+      "icono": "🤝",
+      "pesos_clasificacion": {
+        "atención_detalle": 0.10,
+        "adaptabilidad": 0.15,
+        "trabajo_equipo": 0.65,
+        "tolerancia_estrés": 0.05,
+        "liderazgo": 0.05
+      },
+      "rango_score_optimo": [
+        60,
+        80
+      ],
+      "frases_contextuales": {
+        "fortaleza_principal": "Capacidad de trabajo en equipo, comunicación clara y relaciones interpersonales sólidas",
+        "area_desarrollo": "Liderazgo y toma de decisión independiente",
+        "estilo_trabajo": "Colaborativo, comunicativo, buscador de consenso, orientado a las personas",
+        "recomendacion_rrhh": "Ideal para customer success, recursos humanos, coordinación, comunicación interna",
+        "tipo_proyecto": "Proyectos de cambio organizacional, programas de engagement, programas de capacitación",
+        "ambiente_ideal": "Equipos grandes, enfoque en cultura, roles de soporte y coordinación"
+      },
+      "planes_accion": {
+        "promotion": {
+          "titulo": "Liderazgo de Equipos y Cultura",
+          "descripcion": "Potenciar como líder de equipos y gestor de cultura",
+          "pasos": [
+            "Programa de gestión de equipos de alto desempeño",
+            "Coaching en liderazgo transformacional",
+            "Responsabilidad en iniciativas de cultura y engagement"
+          ],
+          "duracion": "6 meses"
+        },
+        "training": {
+          "titulo": "Liderazgo Decisional",
+          "descripcion": "Desarrollar capacidad de tomar decisiones de forma independiente",
+          "pasos": [
+            "Seminarios de liderazgo en ambigüedad",
+            "Coaching en autonomía y criterio",
+            "Proyectos con mayor responsabilidad individual"
+          ],
+          "duracion": "3 meses"
+        },
+        "consolidation": {
+          "titulo": "Coordinación de Equipos",
+          "descripcion": "Reforzar rol de coordinación y comunicación",
+          "pasos": [
+            "Certificación en gestión de proyectos colaborativos",
+            "Mentoría en facilitación de equipos",
+            "Programas de comunicación interna"
+          ],
+          "duracion": "2 meses"
+        },
+        "improvement": {
+          "titulo": "Desarrollo de Confianza y Autonomía",
+          "descripcion": "Construir confianza en decisiones propias",
+          "pasos": [
+            "Coaching en autoconfianza y criterio",
+            "Proyectos con responsabilidad progresiva",
+            "Mentoría en toma de decisión"
+          ],
+          "duracion": "2 meses"
+        }
+      }
+    },
+    "líder": {
+      "id": "líder",
+      "nombre": "Perfil Líder",
+      "descripcion": "Usuario con alta capacidad de liderazgo, visión estratégica y capacidad para inspirar equipos.",
+      "icono": "👑",
+      "pesos_clasificacion": {
+        "atención_detalle": 0.05,
+        "adaptabilidad": 0.20,
+        "trabajo_equipo": 0.20,
+        "tolerancia_estrés": 0.15,
+        "liderazgo": 0.40
+      },
+      "rango_score_optimo": [
+        75,
+        95
+      ],
+      "frases_contextuales": {
+        "fortaleza_principal": "Liderazgo inspirador, visión estratégica, capacidad de influencia",
+        "area_desarrollo": "Atención al detalle en ejecución operativa",
+        "estilo_trabajo": "Visionario, inspirador, delegador, orientado a resultados amplios",
+        "recomendacion_rrhh": "Ideal para cargos de dirección, liderazgo de transformación, roles de visión",
+        "tipo_proyecto": "Iniciativas estratégicas, transformación organizacional, visión de futuro",
+        "ambiente_ideal": "Organizaciones en crecimiento, roles de impacto estratégico, equipos grandes"
+      },
+      "planes_accion": {
+        "promotion": {
+          "titulo": "Liderazgo Ejecutivo",
+          "descripcion": "Preparación para roles de dirección superior",
+          "pasos": [
+            "Programa de liderazgo ejecutivo",
+            "Mentoría con C-suite",
+            "Responsabilidad en iniciativas de transformación corporativa"
+          ],
+          "duracion": "9-12 meses"
+        },
+        "training": {
+          "titulo": "Gestión Operativa de Excelencia",
+          "descripcion": "Fortalecer ejecución operativa con visión estratégica",
+          "pasos": [
+            "Programas de operaciones y lean management",
+            "Coaching en gestión de detalles críticos",
+            "Mentorías en balance estrategia-ejecución"
+          ],
+          "duracion": "4 meses"
+        },
+        "consolidation": {
+          "titulo": "Expansión de Liderazgo",
+          "descripcion": "Consolidar rol actual y expandir área de influencia",
+          "pasos": [
+            "Proyectos estratégicos de mayor escala",
+            "Mentoría de otros líderes",
+            "Responsabilidad en iniciativas de impacto"
+          ],
+          "duracion": "Continuo"
+        },
+        "improvement": {
+          "titulo": "Desarrollo Integral de Liderazgo",
+          "descripcion": "Fortalecer competencias de liderazgo identificadas",
+          "pasos": [
+            "Programa personalizado de liderazgo",
+            "Coaching ejecutivo intensivo",
+            "Mentoría con líder senior"
+          ],
+          "duracion": "3 meses"
+        }
+      }
+    }
+  },
+  "umbrales_decision": {
+    "promotion": {
+      "min": 85,
+      "acciones_rrhh": [
+        "considerar_ascenso",
+        "proyecto_estrategico",
+        "mentoría_ejecutiva",
+        "sucesión_planning"
+      ],
+      "secciones_pdf": {
+        "oportunidades_carrera": true,
+        "proyectos_estrategicos": true,
+        "desarrollo_liderazgo": true
+      }
+    },
+    "training": {
+      "min": 72,
+      "max": 85,
+      "acciones_rrhh": [
+        "enviar_curso",
+        "asignar_mentor",
+        "proyecto_desarrollo",
+        "coaching"
+      ],
+      "secciones_pdf": {
+        "plan_capacitacion": true,
+        "areas_mejora": true
+      }
+    },
+    "consolidation": {
+      "min": 55,
+      "max": 72,
+      "acciones_rrhh": [
+        "seguimiento_mensual",
+        "apoyo_tecnico",
+        "proyectos_estables",
+        "mentoría_par"
+      ],
+      "secciones_pdf": {
+        "fortalezas": true,
+        "areas_desarrollo": true,
+        "plan_estabilidad": true
+      }
+    },
+    "improvement": {
+      "max": 55,
+      "acciones_rrhh": [
+        "plan_mejora_inmediato",
+        "coaching_intensivo",
+        "revisión_90_días",
+        "evaluación_role_fit"
+      ],
+      "secciones_pdf": {
+        "areas_criticas": true,
+        "plan_mejora": true,
+        "seguimiento_plan": true
+      }
+    }
+  },
+  "prompts_ia": {
+    "analisis_ejecutivo": "Genera un párrafo ejecutivo (2-3 oraciones) para {nombre} con perfil {perfil} y score {score}/100. Sé profesional, específico y directo. Máximo 150 palabras.",
+    "analisis_fortalezas": "Basándote en el perfil '{perfil}' con score {score}, lista 4 fortalezas clave específicas para {nombre}. Cada una máximo 12 palabras. Sé concreto y relevante.",
+    "analisis_debilidades": "Identifica 3 áreas de desarrollo para {nombre} ({perfil}, score={score}). Sé constructivo pero honesto. Máximo 40 palabras cada una.",
+    "plan_accion": "Crea un plan de acción de 4-5 pasos para que {nombre} ({perfil}) progrese de score {score} a {score_objetivo}. Sé específico, realista y measurable. Máximo 200 palabras.",
+    "oportunidades_carrera": "Para {nombre} con perfil {perfil} y excelente desempeño (score={score}), sugiere 3-4 roles o proyectos ideales. Justifica brevemente por qué encajaría.",
+    "coaching_puntos": "El usuario {nombre} ({perfil}, score={score}) tiene estos puntos débiles: {debilidades}. Sugiere 3 consejos de coaching específicos para cada uno.",
+    "resumen_para_manager": "Resume en 3-4 párrafos profesionales el desempeño de {nombre}: perfil={perfil}, score={score}, fortalezas={fortalezas}, mejoras={areas_mejora}."
+  },
+  "configuracion_sistema": {
+    "modelo_ia": "claude-opus-4-6",
+    "max_tokens_default": 500,
+    "cache_responses": true,
+    "timeout_segundos": 30,
+    "rate_limit_por_minuto": 100,
+    "zona_gris_decision": {
+      "activa": true,
+      "rango": [
+        50,
+        75
+      ],
+      "descripcion": "En este rango, el sistema consulta IA para refinamiento de perfil"
+    }
+  },
+  "notas_implementacion": {
+    "1_estructura": "Este JSON actúa como base de conocimiento centralizada",
+    "2_extensibilidad": "Añade nuevos perfiles manteniendo la estructura de pesos_clasificacion",
+    "3_personalizacion": "Los prompts_ia pueden variar según contexto de la empresa",
+    "4_cache": "Cache respuestas de IA para usuarios similares (mismo perfil + rango score)",
+    "5_validacion": "Valida que todos los pesos sumen ~1.0 para consistencia"
+  }
+}

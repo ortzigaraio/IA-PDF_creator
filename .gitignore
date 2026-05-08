@@ -1,0 +1,49 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.pyc
+
+# Entornos virtuales
+venv/
+env/
+.venv/
+.env/
+Scripts/
+Lib/
+Include/
+pyvenv.cfg
+share/
+
+# Variables de entorno / secretos
+.env
+*.env
+secrets.json
+config_local.py
+
+# IDEs
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# Archivos temporales y logs
+*.log
+*.tmp
+*.bak
+logs/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Distribuciones / builds
+dist/
+build/
+*.egg-info/

@@ -1,0 +1,191 @@
+[
+  {
+    "codigo": "CLUSTER_COLABORADOR_NATO",
+    "tipo": "Perfil Principal",
+    "titulo": "Colaborador Integrador",
+    "descripcion": "Destaca por su alta empatía y disposición al trabajo en equipo. Actúa como pegamento social en su departamento, aunque puede evitar el conflicto constructivo por miedo a desagradar o a tomar decisiones impopulares.",
+    "dimensiones": {
+      "liderazgo": "Ejerce influencia desde la cohesión grupal más que desde la autoridad formal. Su liderazgo es efectivo en entornos colaborativos y poco conflictivos.",
+      "trabajo_en_equipo": "Su mayor fortaleza. Facilita activamente la colaboración, reduce tensiones interpersonales y genera un clima de confianza en el grupo.",
+      "comunicacion": "Comunicador empático y cercano, aunque tiende a evitar mensajes directos que puedan generar incomodidad o fricción.",
+      "adaptabilidad": "Se adapta bien a los cambios siempre que no impliquen conflicto interpersonal directo o decisiones que puedan desagradar a sus compañeros.",
+      "toma_de_decisiones": "Tiende a buscar consenso antes de decidir, lo que puede ralentizar los procesos en situaciones que requieren agilidad.",
+      "orientacion_resultados": "Prioriza el bienestar del equipo sobre la consecución agresiva de objetivos. Sus resultados son sólidos pero raramente sobresalientes."
+    },
+    "recomendacion": "Idóneo para roles de coordinación, mediación interna, atención al cliente o gestión de equipos de bajo conflicto.",
+    "alerta": "Evitar posiciones que requieran toma de decisiones impopulares frecuentes o liderazgo en entornos de alta presión y competencia.",
+    "compatibilidades": {
+      "CLUSTER_PERFECCIONISTA_ANSIOSO": {
+        "descripcion_mixta": "La combinación de búsqueda de aprobación y autoexigencia puede generar una persona muy eficaz pero con alto riesgo de agotamiento emocional si no recibe reconocimiento constante.",
+        "alerta": "Necesita entornos con feedback positivo frecuente y métricas de éxito claras para no caer en bloqueo por insatisfacción."
+      },
+      "CLUSTER_REACTIVO_DEFENSIVO": {
+        "descripcion_mixta": "Aunque colaborativo en superficie, bajo presión prolongada puede reaccionar de forma pasivo-agresiva cuando siente que su esfuerzo no es reconocido.",
+        "alerta": "Riesgo de desvinculación silenciosa si el entorno no valida su contribución al grupo."
+      }
+    }
+  },
+  {
+    "codigo": "CLUSTER_EJECUTOR_RUTINARIO",
+    "tipo": "Perfil Principal",
+    "titulo": "Ejecutor Constante",
+    "descripcion": "Perfil funcional y predecible. Se siente cómodo con tareas estructuradas y directrices claras. No busca liderazgo ni destaca por su innovación, pero ofrece alta fiabilidad y estabilidad en el día a día.",
+    "dimensiones": {
+      "liderazgo": "No muestra ambición de liderazgo. Funciona mejor en roles de ejecución bajo supervisión clara y objetivos bien definidos.",
+      "trabajo_en_equipo": "Colabora correctamente dentro de equipos estructurados. No genera conflictos pero tampoco impulsa dinámicas grupales.",
+      "comunicacion": "Comunicación funcional y directa, centrada en la tarea. No destaca en comunicación estratégica o persuasiva.",
+      "adaptabilidad": "Baja tolerancia a la ambigüedad. Rinde por debajo de su capacidad cuando las instrucciones no son claras o el entorno cambia frecuentemente.",
+      "toma_de_decisiones": "Requiere validación externa para decisiones que salgan de su marco de referencia habitual. Evita la autonomía en situaciones nuevas.",
+      "orientacion_resultados": "Cumple consistentemente con los objetivos marcados dentro de su área de confort. No busca superar expectativas de forma proactiva."
+    },
+    "recomendacion": "Adecuado para roles operativos, administrativos o de soporte donde la consistencia y la fiabilidad sean más valoradas que la innovación.",
+    "alerta": "No asignar a proyectos con alta ambigüedad, cambio de requisitos frecuente o que requieran iniciativa autónoma.",
+    "compatibilidades": {
+      "CLUSTER_PASIVO_DESMOTIVADO": {
+        "descripcion_mixta": "La combinación de perfil rutinario con baja motivación genera un empleado que cumple lo mínimo requerido sin ningún tipo de compromiso adicional.",
+        "alerta": "Requiere supervisión activa y objetivos muy concretos para evitar la desvinculación progresiva."
+      }
+    }
+  },
+  {
+    "codigo": "CLUSTER_INDIVIDUALISTA_AISLADO",
+    "tipo": "Perfil Principal",
+    "titulo": "Especialista Solitario",
+    "descripcion": "Demuestra alta competencia técnica pero baja inteligencia interpersonal. Prefiere trabajar sin supervisión ni colaboración. Puede generar fricciones si se le fuerza a participar en dinámicas de grupo constantes.",
+    "dimensiones": {
+      "liderazgo": "No tiene interés en liderar personas. Su influencia se ejerce exclusivamente a través del conocimiento técnico y la experiencia demostrada.",
+      "trabajo_en_equipo": "Baja predisposición al trabajo colaborativo. Puede participar en equipo cuando es estrictamente necesario, pero lo percibe como una carga.",
+      "comunicacion": "Comunicación técnica precisa pero con escasa habilidad para adaptar el mensaje a audiencias no especializadas. Evita la comunicación informal.",
+      "adaptabilidad": "Alta adaptabilidad técnica ante nuevos problemas o tecnologías, pero baja adaptabilidad social ante cambios en la estructura del equipo.",
+      "toma_de_decisiones": "Autónomo y decidido en su área de expertise. Resiste las decisiones externas que percibe como técnicamente incorrectas.",
+      "orientacion_resultados": "Alta orientación a resultados dentro de su dominio técnico. Sus entregas individuales son de alta calidad cuando trabaja con autonomía."
+    },
+    "recomendacion": "Roles de especialización técnica profunda, investigación, desarrollo individual o consultoría donde la autonomía sea el modo de trabajo principal.",
+    "alerta": "Evitar roles de gestión de personas o proyectos que requieran coordinación transversal frecuente con otros departamentos.",
+    "compatibilidades": {
+      "CLUSTER_REACTIVO_DEFENSIVO": {
+        "descripcion_mixta": "La combinación de aislamiento social y baja regulación emocional puede generar conflictos severos cuando se le impone trabajo en equipo o feedback correctivo.",
+        "alerta": "Alto riesgo de incidentes interpersonales en revisiones de rendimiento o cambios organizativos."
+      }
+    }
+  },
+  {
+    "codigo": "CLUSTER_PERFECCIONISTA_ANSIOSO",
+    "tipo": "Perfil Principal",
+    "titulo": "Perfeccionista Limitante",
+    "descripcion": "Entrega trabajo de altísima calidad, pero su obsesión por el detalle genera cuellos de botella y retrasos en las entregas. Presenta un alto riesgo de sufrir agotamiento mental a medio plazo debido a la autoexigencia.",
+    "dimensiones": {
+      "liderazgo": "Lidera desde el estándar de calidad, lo que puede resultar inspirador pero también paralizante para equipos que necesitan velocidad de ejecución.",
+      "trabajo_en_equipo": "Colabora con dificultad cuando percibe que los demás no alcanzan su nivel de exigencia. Puede generar tensión al corregir el trabajo ajeno.",
+      "comunicacion": "Muy preciso en la comunicación escrita. Tiende a la sobre-documentación y puede resultar excesivamente crítico en el feedback.",
+      "adaptabilidad": "Dificultad para adaptarse cuando los plazos no permiten alcanzar su estándar de calidad habitual. Gestiona mal la incertidumbre.",
+      "toma_de_decisiones": "Parálisis por análisis frecuente. Necesita tener todos los datos antes de decidir, lo que ralentiza los procesos en entornos ágiles.",
+      "orientacion_resultados": "Los resultados son de muy alta calidad pero frecuentemente fuera de plazo. La relación calidad-tiempo es desfavorable en proyectos con deadlines estrictos."
+    },
+    "recomendacion": "Roles de control de calidad, auditoría, revisión de procesos críticos o especialización técnica donde la precisión tenga más peso que la velocidad.",
+    "alerta": "Monitorizar signos de burnout activamente. Establecer límites claros de alcance y tiempo para evitar la espiral de perfeccionismo.",
+    "compatibilidades": {}
+  },
+  {
+    "codigo": "CLUSTER_NARCISISTA_COMPETITIVO",
+    "tipo": "Perfil Principal",
+    "titulo": "Competidor Egocéntrico",
+    "descripcion": "Alta motivación por el logro personal y el reconocimiento por encima del éxito del equipo. Puede alcanzar objetivos agresivos a corto plazo, pero tiende a desvalorizar a sus compañeros, desestabilizando gravemente el clima laboral.",
+    "dimensiones": {
+      "liderazgo": "Liderazgo carismático pero autoritario. Genera resultados a corto plazo a costa del compromiso y bienestar del equipo a medio plazo.",
+      "trabajo_en_equipo": "Trabaja en equipo únicamente cuando le reporta un beneficio personal directo. Tiende a apropiarse de los logros colectivos.",
+      "comunicacion": "Comunicador persuasivo y seguro en contextos de presentación. Usa la comunicación estratégicamente para posicionarse, no para informar.",
+      "adaptabilidad": "Alta adaptabilidad personal cuando el cambio le favorece. Resistencia activa cuando el cambio implica pérdida de status o visibilidad.",
+      "toma_de_decisiones": "Decisor rápido y ambicioso. Las decisiones están sesgadas hacia el beneficio propio o del indicador que le hace visible ante la dirección.",
+      "orientacion_resultados": "Altísima orientación a resultados personales y métricas visibles. Puede sacrificar resultados del equipo para destacar individualmente."
+    },
+    "recomendacion": "Si se decide incorporar, asignar a roles individuales de alto rendimiento con métricas claras y sin responsabilidad directa sobre equipos.",
+    "alerta": "Alto riesgo de deterioro del clima laboral. Requiere supervisión cercana del impacto en el equipo y revisión de su continuidad a los 6 meses.",
+    "compatibilidades": {}
+  },
+  {
+    "codigo": "CLUSTER_REACTIVO_DEFENSIVO",
+    "tipo": "Perfil Riesgo",
+    "titulo": "Perfil Reactivo / Baja Regulación",
+    "descripcion": "Muestra baja tolerancia a la crítica y una marcada tendencia a la actitud defensiva frente al feedback. Existe un riesgo alto de generar conflictos interpersonales y resistencia pasiva hacia la autoridad o la supervisión.",
+    "dimensiones": {
+      "liderazgo": "No recomendado para roles de liderazgo. Su baja regulación emocional puede generar ambientes de trabajo tensos e improductivos.",
+      "trabajo_en_equipo": "Genera fricciones recurrentes en el equipo, especialmente en situaciones de presión o cuando recibe feedback correctivo.",
+      "comunicacion": "Comunicación reactiva y defensiva. Interpreta los mensajes neutros como ataques personales con frecuencia.",
+      "adaptabilidad": "Baja. Los cambios generan respuestas defensivas y búsqueda de culpables externos antes de asumir la adaptación necesaria.",
+      "toma_de_decisiones": "Las decisiones están influenciadas por el estado emocional del momento. Inconsistencia en el criterio según el nivel de estrés.",
+      "orientacion_resultados": "Los resultados se ven comprometidos en entornos de alta presión debido a la energía invertida en la gestión emocional."
+    },
+    "recomendacion": "Requiere plan de acompañamiento con RRHH antes de cualquier asignación a equipo. Valorar si el perfil es compatible con la cultura empresarial.",
+    "alerta": "Documentar incidencias desde el primer día. Establecer un protocolo de seguimiento mensual con su responsable directo.",
+    "compatibilidades": {}
+  },
+  {
+    "codigo": "CLUSTER_RESISTENTE_CAMBIO",
+    "tipo": "Perfil Riesgo",
+    "titulo": "Conservador Inflexible",
+    "descripcion": "Muestra ansiedad y rechazo activo ante nuevas metodologías, procesos o tecnologías. Requiere un esfuerzo de gestión desproporcionado por parte de sus superiores para adaptarse a entornos dinámicos.",
+    "dimensiones": {
+      "liderazgo": "No apto para liderar procesos de cambio o transformación. Puede actuar como freno activo en equipos que necesitan evolucionar.",
+      "trabajo_en_equipo": "Colabora correctamente en entornos estables. Genera resistencia pasiva cuando el equipo necesita adoptar nuevas formas de trabajo.",
+      "comunicacion": "Se expresa con claridad sobre lo que no quiere cambiar. Dificultad para comunicar propuestas constructivas de mejora.",
+      "adaptabilidad": "Dimensión crítica. La resistencia al cambio es su rasgo más limitante y el de mayor impacto negativo en entornos en transformación.",
+      "toma_de_decisiones": "Prefiere mantener el status quo. Evita decisiones que impliquen abandonar procesos o herramientas conocidas.",
+      "orientacion_resultados": "Rendimiento aceptable en entornos estables. Caída significativa de rendimiento en contextos de cambio organizativo o tecnológico."
+    },
+    "recomendacion": "Valorar el encaje real con la hoja de ruta de la empresa. Si hay proyectos de transformación previstos, este perfil supondrá un coste de gestión elevado.",
+    "alerta": "No asignar a proyectos de transformación digital, cambio cultural o implantación de nuevas metodologías sin un plan de gestión del cambio personalizado.",
+    "compatibilidades": {}
+  },
+  {
+    "codigo": "CLUSTER_PASIVO_DESMOTIVADO",
+    "tipo": "Perfil Riesgo",
+    "titulo": "Perfil de Mínimo Esfuerzo",
+    "descripcion": "Nivel de compromiso estrictamente limitado a sus obligaciones contractuales básicas. Exhibe una falta de proactividad y apatía generalizada hacia los objetivos estratégicos de la empresa.",
+    "dimensiones": {
+      "liderazgo": "Nulo interés en liderar ni en asumir responsabilidades adicionales. Rechaza activamente cualquier ampliación de su rol.",
+      "trabajo_en_equipo": "Participa en el equipo de forma pasiva. No aporta iniciativa ni energía al grupo, lo que puede contagiar la desmotivación.",
+      "comunicacion": "Comunicación mínima y reactiva. Solo comunica cuando se le requiere directamente. No comparte información de forma proactiva.",
+      "adaptabilidad": "Indiferente a los cambios siempre que no supongan mayor carga de trabajo. La apatía actúa como escudo frente a la implicación.",
+      "toma_de_decisiones": "Evita tomar decisiones que impliquen responsabilidad adicional. Deriva sistemáticamente las decisiones a su superior.",
+      "orientacion_resultados": "Cumple el mínimo para evitar consecuencias. No existe orientación a resultados más allá de la supervivencia laboral."
+    },
+    "recomendacion": "Iniciar conversación formal de diagnóstico para identificar el origen de la desmotivación antes de tomar decisiones sobre continuidad.",
+    "alerta": "Evaluar si la desmotivación es situacional (resoluble) o estructural (incompatibilidad de valores). Plazo máximo de revisión: 90 días.",
+    "compatibilidades": {}
+  },
+  {
+    "codigo": "RECOM_NO_CONTRATAR_TOXICO",
+    "tipo": "Accion Recomendada",
+    "titulo": "Descarte por Incompatibilidad Cultural",
+    "descripcion": "Los marcadores psicométricos indican un alto riesgo de impacto negativo en la cultura empresarial. Se desaconseja la contratación para evitar disrupciones en la dinámica del equipo actual.",
+    "dimensiones": {
+      "liderazgo": "Los patrones de comportamiento detectados son incompatibles con los valores de liderazgo de la organización.",
+      "trabajo_en_equipo": "Riesgo alto de generar dinámicas destructivas en el equipo existente.",
+      "comunicacion": "Los patrones comunicativos detectados representan un riesgo para el clima laboral.",
+      "adaptabilidad": "La rigidez de los patrones detectados sugiere baja capacidad de integración cultural.",
+      "toma_de_decisiones": "El perfil de toma de decisiones presenta sesgos significativos incompatibles con los procesos de la organización.",
+      "orientacion_resultados": "La orientación a resultados detectada prioriza el beneficio individual sobre el colectivo de forma marcada."
+    },
+    "recomendacion": "No iniciar proceso de incorporación. Archivar candidatura con código de no apto cultural para referencia futura.",
+    "alerta": "Documentar los marcadores específicos que motivaron esta recomendación para mantener consistencia en futuros procesos de selección.",
+    "compatibilidades": {}
+  },
+  {
+    "codigo": "RECOM_VIGILANCIA_DESEMPENO",
+    "tipo": "Accion Recomendada",
+    "titulo": "Plan de Mejora de Rendimiento",
+    "descripcion": "Se recomienda establecer objetivos a corto plazo muy estrictos y medibles. Si no se observa una corrección en la actitud y el rendimiento en los próximos 3 meses, se sugiere evaluar la desvinculación.",
+    "dimensiones": {
+      "liderazgo": "Las competencias de liderazgo se encuentran por debajo del umbral mínimo requerido para el puesto evaluado.",
+      "trabajo_en_equipo": "La contribución al equipo no alcanza el estándar requerido. Se requiere mejora measurable en un plazo de 90 días.",
+      "comunicacion": "La calidad y frecuencia de la comunicación profesional requiere un plan de mejora con objetivos específicos.",
+      "adaptabilidad": "La capacidad de adaptación demostrada es insuficiente para los requerimientos actuales del puesto.",
+      "toma_de_decisiones": "El perfil de toma de decisiones requiere acompañamiento y supervisión reforzada durante el período de mejora.",
+      "orientacion_resultados": "Los resultados obtenidos están por debajo del mínimo esperado para el nivel y responsabilidades del puesto."
+    },
+    "recomendacion": "Establecer PIP formal con objetivos SMART, revisiones quincenales documentadas y criterios claros de evaluación al finalizar el período.",
+    "alerta": "Si al término del período de mejora no se alcanzan los objetivos establecidos, iniciar proceso de desvinculación con el soporte del departamento legal.",
+    "compatibilidades": {}
+  }
+]

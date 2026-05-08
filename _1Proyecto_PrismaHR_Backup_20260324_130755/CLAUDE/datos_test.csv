@@ -1,0 +1,11 @@
+nombre,apellidos,email,empresa,sector,puesto,fecha_evaluacion,perfil_primario,perfil_secundario,liderazgo,trabajo_en_equipo,comunicacion,adaptabilidad,toma_de_decisiones,orientacion_resultados
+María,García López,maria.garcia@empresa.com,TechCorp S.L.,Tecnología,Project Manager,2024-01-15,CLUSTER_COLABORADOR_NATO,,7.2,9.1,7.8,6.5,5.9,7.0
+Carlos,Martínez Ruiz,carlos.martinez@empresa.com,IndustrialGroup,Industria,Técnico Senior,2024-01-15,CLUSTER_INDIVIDUALISTA_AISLADO,,3.1,2.8,4.2,6.9,8.5,8.8
+Ana,Fernández Torres,ana.fernandez@empresa.com,RetailMax,Retail,Responsable de Equipo,2024-01-16,CLUSTER_COLABORADOR_NATO,CLUSTER_PERFECCIONISTA_ANSIOSO,6.8,8.5,6.2,5.5,5.1,7.9
+Roberto,López Sánchez,roberto.lopez@empresa.com,FinanzasPlus,Banca,Analista,2024-01-16,CLUSTER_EJECUTOR_RUTINARIO,,5.5,5.8,5.2,4.1,4.8,5.9
+Elena,Jiménez Castro,elena.jimenez@empresa.com,SaludTotal,Salud,Coordinadora,2024-01-17,CLUSTER_PERFECCIONISTA_ANSIOSO,,5.9,5.5,7.8,4.2,3.8,6.1
+David,Moreno Vargas,david.moreno@empresa.com,ConstructArte,Construcción,Jefe de Obra,2024-01-17,CLUSTER_REACTIVO_DEFENSIVO,,4.2,3.1,3.8,4.5,4.9,6.2
+Laura,Díaz Hernández,laura.diaz@empresa.com,LogísticaRed,Logística,Operaria,2024-01-18,CLUSTER_PASIVO_DESMOTIVADO,,2.1,3.5,2.8,3.1,2.5,2.9
+Javier,Romero Gil,javier.romero@empresa.com,MarketingPro,Marketing,Director Comercial,2024-01-18,CLUSTER_NARCISISTA_COMPETITIVO,,8.9,4.2,8.5,8.1,9.2,9.5
+Sofía,Álvarez Núñez,sofia.alvarez@empresa.com,EduCampus,Educación,Docente,2024-01-19,CLUSTER_RESISTENTE_CAMBIO,,5.1,6.8,5.5,2.1,4.2,5.0
+Miguel,Torres Blanco,miguel.torres@empresa.com,StartupTech,Tecnología,CTO,2024-01-19,RECOM_NO_CONTRATAR_TOXICO,,7.8,2.5,6.1,7.5,8.8,8.2

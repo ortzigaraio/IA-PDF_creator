@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Informe Técnico PRO - {{ nombre_candidato }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet" />
+    <style>
+        @page { size: A4; margin: 0; }
+        body { font-family: 'Roboto', sans-serif; color: #374151; background-color: white; margin: 0; padding: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        .page-container { width: 210mm; height: 297mm; margin: 0 auto; background: white; padding: 15mm 20mm; box-sizing: border-box; display: flex; flex-direction: column; position: relative; }
+        .page-break { break-after: page; }
+        .section-header { font-size: 0.85rem; font-weight: 700; color: #1e3a8a; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.5rem; margin-bottom: 1.5rem; }
+        .analysis-card { background-color: #f9fafb; border: 1px solid #f3f4f6; padding: 1.5rem; border-radius: 8px; flex: 1; }
+        .analysis-card h4 { color: #1e3a8a; font-size: 0.75rem; font-weight: 900; text-transform: uppercase; margin-bottom: 0.75rem; border-bottom: 1px solid #e5e7eb; padding-bottom: 0.5rem; }
+        @media print { .page-container { margin: 0; width: 100%; height: 297mm; } }
+    </style>
+</head>
+<body>
+    <!-- PÁGINA 1: PERFIL Y MAPA -->
+    <div class="page-container page-break">
+        <!-- Header -->
+        <header class="flex justify-between items-end border-b-2 border-black pb-4 mb-6">
+            <div class="flex items-center gap-3">
+                <div class="bg-black text-white px-2 py-1 font-black text-xs rounded">PHR</div>
+                <div>
+                    <h1 class="text-xl font-black text-black tracking-tighter">PRISMA<span class="font-light">HR</span></h1>
+                    <p class="text-[9px] font-bold text-gray-500 uppercase tracking-widest">Technical Evaluation Division</p>
+                </div>
+            </div>
+            <div class="text-right">
+                <h2 class="text-xl font-bold text-black uppercase tracking-tight">Informe Técnico de Evaluación</h2>
+                <p class="text-[10px] text-gray-500 italic">Sistema v4.2 PRO</p>
+            </div>
+        </header>
+
+        <!-- Candidate Info -->
+        <section class="grid grid-cols-3 gap-0 mb-8 border border-gray-200">
+            <div class="col-span-2 p-4 border-r border-gray-200">
+                <label class="text-[9px] uppercase font-bold text-gray-400 block mb-1">Candidato / Colaborador</label>
+                <h3 class="text-2xl font-bold text-black mb-1">{{ nombre_candidato }}</h3>
+                <p class="text-[10px] text-gray-500 italic">Perfil técnico evaluado bajo marcos de competencia multidimensional.</p>
+            </div>
+            <div class="p-4 space-y-4 bg-gray-50/50 text-right">
+                <div>
+                    <label class="text-[9px] uppercase font-bold text-gray-400 block">ID Evaluación</label>
+                    <span class="text-[11px] font-bold text-gray-700">{{ id_evaluacion }}</span>
+                </div>
+                <div>
+                    <label class="text-[9px] uppercase font-bold text-gray-400 block">Fecha Emisión</label>
+                    <span class="text-[11px] font-bold text-gray-700">{{ fecha_actual }}</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Content P1 -->
+        <div class="grid grid-cols-5 gap-10 mb-8 flex-1">
+            <div class="col-span-3 space-y-8">
+                <div>
+                    <h3 class="section-header">Determinación del Perfil</h3>
+                    <div class="mb-4">
+                        <span class="bg-blue-600 text-white text-[8px] font-bold px-2 py-1 rounded uppercase">Clasificación Senior</span>
+                    </div>
+                    <h4 class="text-xl font-bold text-black mb-3">{{ titulo_perfil }}</h4>
+                    <p class="text-[11px] text-gray-600 leading-relaxed text-justify">{{ desc_perfil }}</p>
+                </div>
+
+                <div>
+                    <h3 class="section-header">Dictamen de Gestión</h3>
+                    <div class="bg-blue-50/30 border-l-4 border-blue-900 p-6 rounded-r">
+                        <h5 class="text-[11px] font-bold text-blue-900 uppercase mb-3">{{ titulo_recom }}</h5>
+                        <div class="text-[11px] text-gray-700 leading-relaxed text-justify">
+                            {{ desc_recom|safe }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-span-2">
+                <h3 class="section-header">Mapa de Competencias</h3>
+                <div class="border border-gray-100 rounded-lg p-6 bg-white shadow-sm text-center">
+                    <img src="data:image/png;base64,{{ imagen_radar_base64 }}" class="w-full h-auto mb-6" />
+                    <div class="text-left">
+                        <h5 class="text-[10px] font-bold text-gray-800 uppercase mb-4 tracking-wider">Atributos Clave Evaluados:</h5>
+                        <ul class="text-[10px] text-gray-600 space-y-3">
+                            {% for item in radar_items %}
+                            <li class="flex items-center justify-between border-b border-gray-50 pb-2">
+                                <div class="flex items-center gap-2">
+                                    <span class="w-2 h-2 bg-blue-900 rounded-full"></span>
+                                    <span>{{ item.nombre }}</span>
+                                </div>
+                                <span class="font-bold text-blue-900 bg-blue-50 px-2 py-0.5 rounded">{{ item.valor }}%</span>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer P1 -->
+        <footer class="mt-8 pt-6 border-t border-gray-100 flex justify-between items-end">
+            <div class="text-[9px] text-gray-400 font-bold uppercase tracking-tight">PrismaHR Division • Página 1 de 2</div>
+            <div class="text-[8px] text-gray-300 font-mono italic">SECURE_KEY: {{ auth_key }}</div>
+        </footer>
+    </div>
+
+    <!-- PÁGINA 2: ANÁLISIS DINÁMICO ESTRATÉGICO -->
+    <div class="page-container">
+        <!-- Header Page 2 -->
+        <header class="flex justify-between items-center border-b border-gray-200 pb-3 mb-10">
+            <div class="flex items-center gap-2">
+                <div class="bg-black text-white px-1.5 py-0.5 font-black text-[10px] rounded">PHR</div>
+                <h1 class="text-sm font-bold text-black tracking-tighter uppercase">Análisis Dinámico de Competencias</h1>
+            </div>
+            <p class="text-[10px] text-gray-400 uppercase font-bold tracking-widest">{{ nombre_candidato }}</p>
+        </header>
+
+        <!-- Structured Analysis Blocks -->
+        <section class="flex-1 space-y-6">
+            <div class="grid grid-cols-2 gap-6">
+                <div class="analysis-card">
+                    <h4>Identificación de Fortalezas</h4>
+                    <p class="text-[11px] text-gray-600 leading-relaxed text-justify">
+                        {{ analisis_bloque_1|safe }}
+                    </p>
+                </div>
+                <div class="analysis-card">
+                    <h4>Potencial de Liderazgo</h4>
+                    <p class="text-[11px] text-gray-600 leading-relaxed text-justify">
+                        {{ analisis_bloque_2|safe }}
+                    </p>
+                </div>
+            </div>
+            
+            <div class="analysis-card">
+                <h4>Diagnóstico y Recomendación Final</h4>
+                <p class="text-[11px] text-gray-600 leading-relaxed text-justify">
+                    {{ analisis_bloque_3|safe }}
+                </p>
+            </div>
+
+            <!-- Matriz de Riesgos Minimalista -->
+            <div class="grid grid-cols-2 gap-6 mt-8">
+                <div class="bg-red-50/50 p-4 border border-red-100 rounded-lg">
+                    <h5 class="text-[9px] font-bold text-red-700 uppercase mb-2">Puntos de Atención Crítica</h5>
+                    <ul class="text-[10px] text-red-900 list-disc list-inside space-y-1">
+                        <li>Optimización de tiempos de respuesta bajo presión extrema.</li>
+                        <li>Sincronización de liderazgo lateral en equipos híbridos.</li>
+                    </ul>
+                </div>
+                <div class="bg-green-50/50 p-4 border border-green-100 rounded-lg">
+                    <h5 class="text-[9px] font-bold text-green-700 uppercase mb-2">Catalizadores de Crecimiento</h5>
+                    <ul class="text-[10px] text-green-900 list-disc list-inside space-y-1">
+                        <li>Alta capacidad de análisis cuantitativo y estructurado.</li>
+                        <li>Fomento de una cultura de proactividad metódica.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Final Footer Page 2 -->
+        <footer class="mt-12 pt-8 border-t border-gray-200 flex justify-between items-end">
+            <div class="space-y-6">
+                <div class="flex gap-12">
+                    <div class="w-40 border-b border-gray-300 pb-1">
+                        <p class="text-[8px] font-bold text-gray-400 uppercase">Firma del Evaluador</p>
+                    </div>
+                    <div class="w-40 border-b border-gray-300 pb-1">
+                        <p class="text-[8px] font-bold text-gray-400 uppercase">Validación Gerencial</p>
+                    </div>
+                </div>
+                <div class="text-[10px]">
+                    <p class="font-bold text-black uppercase tracking-tighter">PrismaHR Technical Division</p>
+                    <p class="text-gray-400 text-[8px]">Certificación v4.2 PRO • 2026</p>
+                </div>
+            </div>
+            <div class="text-right">
+                <p class="text-[9px] text-gray-400 font-bold uppercase tracking-tight">Página 2 de 2 • Fin del Informe</p>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>
