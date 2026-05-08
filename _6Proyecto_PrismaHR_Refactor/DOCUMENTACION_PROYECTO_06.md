@@ -1,4 +1,4 @@
-# PrismaHR Pro — Documentación Técnica del Proyecto 05
+# PrismaHR Refactor — Documentación Técnica del Proyecto 06
 
 ## 1. Objetivo del Proyecto
 
@@ -24,26 +24,26 @@ Analizar el perfil de candidatos o colaboradores comparando sus competencias con
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                      run_batch.py                               │
-│                  (Punto de entrada)                              │
+│                      motor_prisma.py                            │
+│                  (Punto de entrada)                             │
 └─────────────────────────┬───────────────────────────────────────┘
                           │
                           ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│                    PrismaEngine (main.py)                       │
+│                    PrismaEngine                                 │
 │            Motor central que orquesta el flujo                  │
 └──────────┬──────────────┬──────────────┬──────────────────────┘
            │              │              │
            ▼              ▼              ▼
 ┌─────────────────┐ ┌───────────┐ ┌──────────────────────────┐
 │  AI Client      │ │ Processor │ │ Content Generator        │
-│  (Groq API)     │ │ (Lógica)  │ │ (6 prompts paralelos)    │
+│  (Groq API)     │ │ (Lógica)  │ │ (6 prompts asíncronos)   │
 └────────┬────────┘ └─────┬─────┘ └──────────┬───────────────┘
          │                 │                   │
          ▼                 ▼                   ▼
 ┌─────────────────┐ ┌───────────┐ ┌──────────────────────────┐
 │ PDF Generator   │ │ Excel     │ │ Charts                    │
-│ (Jinja2+Play)   │ │ Individual│ │ (Matplotlib PNG bytes)   │
+│ (Jinja2+Play)   │ │ Templates │ │ (Matplotlib PNG bytes)   │
 │                 │ │ +Consolid │ │                          │
 └─────────────────┘ └───────────┘ └──────────────────────────┘
 ```
@@ -98,7 +98,6 @@ Percentil = (candidatos_con_score_menor / total) × 100
 Wrapper sobre Groq SDK con:
 - **Retry automático**: hasta 3 intentos con backoff exponencial
 - **Ejecución asíncrona**: usa ThreadPoolExecutor para no bloquear el event loop
-- **ThreadPoolExecutor compartido**: max_workers=12 para eficiencia
 
 ### 3.5 Generador de Contenido (`content_generator.py`)
 Lanza **6 prompts en paralelo** con `asyncio.gather()`:
@@ -109,8 +108,6 @@ Lanza **6 prompts en paralelo** con `asyncio.gather()`:
 4. `_puntos_criticos()`: 2 puntos de atención
 5. `_catalizadores()`: 2 catalizadores de crecimiento
 6. `_alerta_riesgo()`: Evaluación de burnout/fuga de talento
-
-**Optimización**: Secuencial ~8-12s → Paralelo ~2s (6x más rápido)
 
 ### 3.6 Generador PDF (`pdf_generator.py`)
 Usa **Jinja2 + Playwright**:
@@ -132,19 +129,23 @@ Funciones puras que retornan **bytes PNG**:
 | `ranking_equipo_bytes()` | Ranking horizontal |
 | `heatmap_equipo_bytes()` | Mapa de calor del equipo |
 
-### 3.8 Excel Individual (`excel/individual.py`)
-Genera libro con **5 hojas**:
+### 3.8 Excel Individual (Sistema Híbrido de Plantillas en V6)
+El **Proyecto 6** introduce un gran cambio en la generación de Excels respecto a la V5: el paso de una generación 100% programática a un **sistema híbrido basado en plantillas**.
 
-1. **Dashboard**: KPIs + 4 gráficos embebidos
-2. **Radar Comparativo**: Tabla + gráfico radar nativo (interactivo)
-3. **Análisis de Gaps**: Tabla + gráfico de barras de gaps
-4. **Algoritmo de Cálculo**: Explicación paso a paso de la fórmula
-5. **Fortalezas y Debilidades**: Contenido cualitativo
+* **En Proyecto 5**: El código construía el Excel desde cero celda por celda (`src/excel/individual.py`).
+* **En Proyecto 6**: Se usa un archivo base (`plantilla_excel.xlsx` generado mediante `generar_plantilla.py`). El script `motor_prisma.py` carga esta plantilla y busca **marcadores de texto dinámicos** (ej. `[CHART_RADAR]`, `[LOGO_EMPRESA]`, `[VAL1]`) para inyectar datos y gráficos (`matplotlib`) generados al vuelo. Esto permite que el área de RRHH o diseño pueda modificar colores y layouts en el Excel sin tocar código Python.
 
-### 3.9 Excel Consolidado (`excel/consolidado.py`)
-Genera reporte maestro del equipo con:
-- **Ranking del Equipo**: Ordenado por compatibilidad
-- **Heatmap del Equipo**: Mapa de calor de competencias
+Las 5 hojas principales generadas (o rellenadas desde la plantilla) son:
+1. **Dashboard**: KPIs + gráficos embebidos (Radar, Barras, Scatter, Coxcomb).
+2. **Radar Comparativo**: Tabla + gráfico radar nativo interactivo.
+3. **Análisis de Gaps**: Tabla + gráfico de barras de gaps.
+4. **Algoritmo de Cálculo**: Explicación paso a paso de la fórmula.
+5. **Fortalezas y Debilidades**: Contenido cualitativo inyectado desde la IA.
+
+### 3.9 Excel Consolidado
+Mantiene el reporte maestro del equipo con:
+- **Ranking del Equipo**: Ordenado por compatibilidad.
+- **Heatmap del Equipo**: Mapa de calor de competencias.
 
 ---
 
@@ -152,16 +153,15 @@ Genera reporte maestro del equipo con:
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────┐
-│                          INICIO: run_batch.py                              │
-│                    python run_batch.py datos_empresa.json                  │
+│                          INICIO: motor_prisma.py                         │
+│                    python motor_prisma.py                                │
 └────────────────────────────────┬───────────────────────────────────────────┘
                                  │
                                  ▼
 ┌──────────────────────────────────────────────────────────────────────────┐
 │  PASO 1: CARGA DE DATOS                                                   │
 │  ├─ Leer JSON con empresas y clientes                                     │
-│  ├─ Validar estructura con Pydantic                                      │
-│  └─ Crear directorio de salida                                            │
+│  └─ Crear directorios de salida                                           │
 └────────────────────────────────┬───────────────────────────────────────────┘
                                  │
                                  ▼
@@ -199,21 +199,11 @@ Genera reporte maestro del equipo con:
 ┌──────────────────────────────────────────────────────────────────────────┐
 │  PASO 4: GENERAR CONTENIDO IA (PARALELO)                                 │
 │  └─ 6 llamadas async a Groq simultaneouses                                │
-│     ├── Bloques de análisis                                              │
-│     ├── Descripción del veredicto                                        │
-│     ├── Fortalezas                                                        │
-│     ├── Puntos críticos                                                   │
-│     ├── Catalizadores                                                     │
-│     └── Alerta de riesgo                                                  │
 └────────────────────────────────┬───────────────────────────────────────────┘
                                  │
                                  ▼
 ┌──────────────────────────────────────────────────────────────────────────┐
 │  PASO 5: DECIDIR VEREDITO                                                │
-│  ├─ Compatibilidad ≥ 85% → PROMOCIÓN DIRECTA                            │
-│  ├─ Compatibilidad 72-84% → FORMACIÓN TÉCNICA                           │
-│  ├─ Compatibilidad 55-71% → CONSOLIDACIÓN                               │
-│  └─ Compatibilidad < 55% → PLAN DE MEJORA                              │
 └────────────────────────────────┬───────────────────────────────────────────┘
                                  │
         ┌─────────────────────────┼─────────────────────────┐
@@ -221,12 +211,10 @@ Genera reporte maestro del equipo con:
         ▼                         ▼                         ▼
 ┌───────────────────┐  ┌────────────────────┐  ┌──────────────────────────┐
 │  GENERAR PDF      │  │  GENERAR EXCEL     │  │  ACUMULAR EN LISTA       │
-│  - Render HTML    │  │  INDIVIDUAL        │  │  (para consolidado)      │
-│  - Gráfico radar  │  │  - 5 hojas         │  │                          │
-│  - Convertir PDF  │  │  - Múltiples       │  │  ItemEquipo:             │
-│  (Playwright)     │  │    gráficos        │  │  - Usuario               │
-│                   │  │                    │  │  - Resultado             │
-│                   │  │                    │  │  - EmpresaInfo           │
+│  - Render HTML    │  │  INDIVIDUAL      │  │  (para consolidado)      │
+│  - Convertir PDF  │  │  - Cargar Plantilla│  │                          │
+│  (Playwright)     │  │  - Reemplazar      │  │                          │
+│                   │  │    marcadores      │  │                          │
 └───────────────────┘  └────────────────────┘  └──────────────────────────┘
                                  │
                     ┌────────────┴────────────┐
@@ -236,9 +224,6 @@ Genera reporte maestro del equipo con:
                                  ▼
 ┌──────────────────────────────────────────────────────────────────────────┐
 │  PASO 6: GENERAR EXCEL CONSOLIDADO                                       │
-│  - Ranking del equipo                                                    │
-│  - Heatmap colectivo                                                    │
-│  - Guardar archivo maestro                                              │
 └────────────────────────────────┬───────────────────────────────────────────┘
                                  │
                     ┌────────────┴────────────┐
@@ -253,86 +238,28 @@ Genera reporte maestro del equipo con:
 
 ---
 
-## 5. Diagrama de Flujo Detallado
+## 5. Consideraciones Técnicas y Limitaciones Conocidas
 
-```
-                    ┌─────────────────┐
-                    │  JSON de Entrada │
-                    │ datos_empresa   │
-                    └────────┬────────┘
-                             │
-                             ▼
-                    ┌─────────────────┐
-                    │ PrismaEngine    │
-                    │ .run_batch_json │
-                    └────────┬────────┘
-                             │
-                             ▼
-                 ┌────────────────────────┐
-                 │ for empresa in empresas│◄────────┐
-                 └───────────┬────────────┘         │
-                             │                      │
-                             ▼                      │
-              ┌─────────────────────────────┐       │
-              │ 1. Parse EmpresaInfo        │       │
-              │ 2. Collect scores equipo   │       │
-              └───────────┬─────────────────┘       │
-                           │                       │
-                           ▼                       │
-              ┌─────────────────────────────┐       │
-              │ for cliente in clientes     │◄──────┘
-              └───────────┬─────────────────┘   (loop)
-                           │
-         ┌─────────────────┼─────────────────┐
-         │                 │                 │
-         ▼                 ▼                 ▼
-   ┌───────────┐    ┌───────────┐    ┌───────────────┐
-   │ Processor │    │ Processor │    │ ContentGen    │
-   │ .percentil│    │ .compatib │    │ .generar_todo │
-   └─────┬─────┘    └─────┬─────┘    └───────┬───────┘
-         │                 │                  │
-         └────────┬────────┘                  │
-                  │                           │
-                  │         ┌─────────────────┘
-                  │         │
-                  ▼         ▼
-         ┌────────────────────────┐
-         │ ResultadoModel completo│
-         │ - compatibilidad       │
-         │ - veredicto            │
-         │ - contenido IA          │
-         └───────────┬────────────┘
-                     │
-    ┌────────────────┼────────────────┐
-    │                │                │
-    ▼                ▼                ▼
-┌────────┐     ┌──────────┐    ┌──────────────┐
-│  PDF   │     │  Excel   │    │ ItemEquipo[]│
-│ Gen    │     │ Individual│    │ (acumulador)│
-└────────┘     └──────────┘    └──────┬───────┘
-                                     │
-                    ┌────────────────┘
-                    │ (post-loop)
-                    ▼
-           ┌──────────────────┐
-           │ Excel Consolidado│
-           │ - Ranking        │
-           │ - Heatmap        │
-           └──────────────────┘
-```
+- **Integración de Logos en Excel**: El sistema intenta inyectar dinámicamente el logo de la empresa (`logo_url` del JSON) en la etiqueta `[LOGO_EMPRESA]` del Excel. Es **muy recomendable** alojar estas imágenes en servidores directos (S3, Imgur, hosting propio). Algunas URLs públicas (como las de Wikimedia/Wikipedia) devuelven un error HTTP 400 al intentar descargarlas mediante `urllib`. El sistema captura el error y continúa sin interrumpirse, pero el logo no se renderizará en el Excel.
+- **Rutas y Modulos**: En la V6, `motor_prisma.py` actúa como orquestador central y maneja la lógica de plantillas de Excel, reemplazando algunas partes de `src/main.py`.
 
 ---
 
 ## 6. Archivos del Proyecto
 
 ```
-_5Proyecto_PrismaHR_Pro/
-├── run_batch.py              # Punto de entrada
+_6Proyecto_PrismaHR_Refactor/
+├── motor_prisma.py           # Motor principal (V6 Template System)
+├── run_batch.py              # Punto de entrada (opcional)
+├── servidor_webhook.py       # Servidor para integraciones por Webhook
+├── generar_plantilla.py      # Generador de plantillas base de Excel
 ├── .env                      # Variables de entorno
 ├── plantilla_radar.html      # Plantilla HTML para PDF
-├── src/
+├── plantilla_excel.xlsx      # Plantilla base para Excel corporativo
+├── README_SISTEMA.md         # Documentación del sistema general
+├── src/                      # Módulos legados / utilidades
 │   ├── __init__.py
-│   ├── main.py               # PrismaEngine (orquestador)
+│   ├── main.py               # PrismaEngine
 │   ├── config.py             # Settings (Pydantic)
 │   ├── models.py             # Modelos de datos (Pydantic v2)
 │   ├── processor.py          # Lógica de negocio
@@ -342,7 +269,7 @@ _5Proyecto_PrismaHR_Pro/
 │   ├── charts.py             # Gráficos Matplotlib
 │   └── excel/
 │       ├── __init__.py
-│       ├── individual.py     # Excel por candidato
+│       ├── individual.py     # Excel programático (V5 Legacy)
 │       └── consolidado.py    # Excel maestro de equipo
 └── Salida_PDF/               # PDFs generados
 └── Salida_Excel/             # Excels generados
@@ -361,7 +288,8 @@ _5Proyecto_PrismaHR_Pro/
         "sector": "Tecnología",
         "plantilla": {
           "color_primario": "#1e40af",
-          "color_acento": "#f59e0b"
+          "color_acento": "#f59e0b",
+          "logo_url": "https://url-del-logo.com/logo.png"
         },
         "pesos_perfil_objetivo": {
           "adaptabilidad": 8,
@@ -400,12 +328,11 @@ _5Proyecto_PrismaHR_Pro/
 
 | Aspecto | Mejora |
 |---------|--------|
-| **Velocidad IA** | 6x más rápido con `asyncio.gather()` |
-| **Robustez** | Retry con backoff exponencial (tenacity) |
-| **Memoria** | ThreadPoolExecutor compartido (no crear uno por llamada) |
-| **Limpieza** | Context manager `temp_png()` para archivos temporales |
-| **Tipado** | Pydantic v2 para validación automática |
-| **Concurrencia** | Browser Playwright compartido para todos los PDFs |
+| **Velocidad IA** | Generación asíncrona para múltiples prompts de Groq |
+| **Robustez** | Captura inteligente de errores HTTP para URLs de logos |
+| **Plantillas Flexibles** | Uso de marcadores (e.g., `[CHART_RADAR]`) para insertar gráficos en Excel |
+| **Memoria** | Liberación de gráficos en memoria (`plt.close()`) y context managers |
+| **Modularidad** | Separación del generador de plantillas (`generar_plantilla.py`) |
 
 ---
 
@@ -415,10 +342,14 @@ _5Proyecto_PrismaHR_Pro/
 # 1. Configurar .env
 echo "GROQ_API_KEY=tu_clave_aqui" > .env
 
-# 2. Ejecutar
-python run_batch.py datos_empresa.json
+# 2. Instalar dependencias
+pip install -r requirements.txt
+playwright install chromium
 
-# 3. Verificar salidas
+# 3. Ejecutar
+python motor_prisma.py
+
+# 4. Verificar salidas
 ls Salida_PDF/   # PDFs individuales
 ls Salida_Excel/ # Excels individuales + consolidado
 ```
