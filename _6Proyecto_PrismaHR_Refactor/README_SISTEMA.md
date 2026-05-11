@@ -1,208 +1,100 @@
-# Documentación Técnica del Sistema Perfil_Psic_PDF_maker v2.0
+# Documentación Técnica del Sistema PrismaHR Refactor (v6.0)
 
-## 1. Resumen de la Estructura General
+Este documento describe la arquitectura y el funcionamiento del motor **PrismaHR**, un sistema de evaluación de talento impulsado por IA que genera informes ejecutivos en PDF y Excel.
 
-El sistema **Perfil_Psic_PDF_maker** es un motor de IA decisional que genera informes PDF personalizados para la evaluación de candidatos/colaboradores en Recursos Humanos. El flujo de trabajo es el siguiente:
+## 1. Resumen de la Arquitectura
+El sistema utiliza un enfoque modular y asíncrono para procesar grandes volúmenes de datos con una latencia mínima.
 
+```mermaid
+graph TD
+    A[JSON Entrada: datos_empresa.json] --> B[motor_prisma.py]
+    B --> C[IA: Groq Llama 3.3 70B]
+    B --> D[Gráficos: Matplotlib]
+    B --> E[Plantilla HTML: Jinja2]
+    B --> F[Plantilla Excel: openpyxl]
+    E --> G[PDF Final: Playwright]
+    F --> H[Excel Final: Dashboard]
 ```
-Excel Entrada → motor_prisma.py → IA (Groq) → plantilla_radar.html → PDF Final
-```
 
-**Flujo de ejecución:**
-1. El script lee los datos de candidatos desde `Datos_Entrada_Prisma.xlsx`
-2. Para cada candidato, el motor de IA analiza sus dimensiones (liderazgo, trabajo en equipo, adaptabilidad, etc.)
-3. Se consulta a Groq (IA) para generar contenido personalizado basado en el perfil
-4. Los datos se renderizan en la plantilla HTML `plantilla_radar.html`
-5. Se genera un PDF profesional de 2 páginas usando Playwright
+> [!IMPORTANT]
+> El sistema actual (V6) ya no utiliza archivos Excel de entrada ni el antiguo `diccionario_perfiles.json`. Ahora todo el conocimiento y los datos residen en un único archivo JSON centralizado.
 
 ---
 
-## 2. Descripción de Cada Archivo
+## 2. Componentes Principales
 
-### 2.1 motor_prisma.py (Motor de Procesamiento Principal)
+### 2.1 motor_prisma.py
+Es el orquestador central. Sus funciones incluyen:
+- **Carga de Datos**: Lee `datos_empresa.json`.
+- **Cálculo de Compatibilidad**: Compara las dimensiones del usuario con los pesos del perfil objetivo de la empresa.
+- **Orquestación IA**: Lanza 6 peticiones asíncronas a Groq para generar el contenido narrativo.
+- **Generación Documental**: Gestiona la creación de PDFs y Excels.
 
-**Propósito:** Orquestar todo el proceso de generación de informes.
+### 2.2 datos_empresa.json (Estructura de Datos)
+> [!NOTE]
+> Este es el núcleo de información del sistema. Define tanto la configuración de la empresa como los datos de los evaluados.
 
-**Clases principales:**
+**Estructura:**
+- `empresas`: Diccionario indexado por ID de empresa.
+  - `info`: Nombre, sector, colores corporativos y logo.
+  - `pesos_perfil_objetivo`: Valores 0-10 para las 7 dimensiones (Adaptabilidad, Comunicación, Creatividad, Disciplina, Empatía, Iniciativa, Resiliencia).
+  - `clientes`: Lista de personas evaluadas con sus puntuaciones (0-100) y frases de observación.
 
-| Clase | Función |
-|-------|---------|
-| [`UsuarioData`](_3Proyecto_PrismaHR/motor_prisma.py:20) | Estructura de datos del candidato (nombre, scores de 5 dimensiones) |
-| [`AnalisadorParametros`](_3Proyecto_PrismaHR/motor_prisma.py:40) | Normaliza los scores (0-100) y calcula promedio |
-| [`ClasificadorHibrido`](_3Proyecto_PrismaHR/motor_prisma.py:63) | Clasifica al candidato en un perfil usando Best Fit clásico + IA para zonas grises |
-| [`MotorDecision`](_3Proyecto_PrismaHR/motor_prisma.py:101) | Decide qué veredicto dar (Promoción, Formación, Consolidación, Mejora) |
-| [`GeneradorContenidoDinamico`](_3Proyecto_PrismaHR/motor_prisma.py:126) | Genera texto personalizado usando IA Groq |
-| [`MotorPDFv2`](_3Proyecto_PrismaHR/motor_prisma.py:214) | Orquestador principal que une todo |
-| [`ejecutar_batch_excel()`](_3Proyecto_PrismaHR/motor_prisma.py:245) | Lee Excel, procesa cada fila, genera PDFs |
+### 2.3 Sistema de Plantillas Híbrido
+- **PDF**: Usa `plantilla_radar.html` con Jinja2 y Playwright. Permite diseños de alta fidelidad con CSS moderno.
+- **Excel**: Usa `plantilla_excel.xlsx`. El sistema busca marcadores de texto (ej: `[CHART_RADAR]`, `[LOGO_EMPRESA]`) e inyecta dinámicamente los gráficos y datos.
 
-**Métodos de generación de contenido IA:**
-- `generar_analisis_bloques()` → Genera 3 bloques de análisis (Fortalezas, Liderazgo, Veredicto)
-- `generar_descripcion_recom()` → Genera la justificación del dictamen
-- `generar_fortalezas()` → Lista fortalezas del perfil
-- `generar_plan_accion()` → Genera un PDI de 12 meses
-- `generar_puntos_criticos()` → **NUEVO:** Genera 2 puntos de atención dinámica basados en debilidades
-- `generar_catalizadores_crecimiento()` → **NUEVO:** Genera 2 catalizadores de crecimiento basados en fortalezas
+### 2.4 Generación Narrativa (Las 6 Peticiones a Groq)
+El motor lanza 6 peticiones asíncronas simultáneas para transformar los datos numéricos en narrativa ejecutiva. Todas utilizan el modelo **Llama 3.3 70B**.
 
----
+| Petición | Datos Enviados (Input) | Contenido Generado (Output) | Destino en PDF (`plantilla_radar.html`) |
+| :--- | :--- | :--- | :--- |
+| **1. Bloques Narrativos** | Nombre, Perfil, Score y **Frases Predeterminadas**. | 3 bloques: Fortalezas, Liderazgo y Veredicto Final. | `{{ analisis_bloque_1/2/3 }}` |
+| **2. Justificación** | Nombre, Perfil y Score de compatibilidad. | Resumen ejecutivo (2-3 frases) que defiende el veredicto. | `{{ desc_recom }}` |
+| **3. Fortalezas Clave** | Perfil objetivo y dimensiones técnicas. | Lista de las 3 habilidades más destacadas del evaluado. | Listas dinámicas de la pág. 1. |
+| **4. Puntos Críticos** | Scores de las 7 dimensiones (foco en las más bajas). | 2 áreas de mejora urgente y atención prioritaria. | `{{ puntos_criticos }}` (Pág. 2) |
+| **5. Catalizadores** | Scores de las 7 dimensiones (foco en las más altas). | 2 oportunidades de crecimiento y desarrollo estratégico. | `{{ catalizadores_crecimiento }}` (Pág. 2) |
+| **6. Alerta de Riesgo** | Resiliencia, Empatía y **Frases Predeterminadas**. | Nivel de riesgo (Bajo/Medio/Alto) de burnout o fuga. | Área de Evaluación de Riesgos. |
 
-### 2.2 plantilla_radar.html (Plantilla de Presentación)
+> [!IMPORTANT]
+> Las **Frases Predeterminadas** son críticas: actúan como el "ancla de verdad" para la IA, obligándola a que toda la narrativa generada sea coherente con las observaciones manuales del evaluador.
 
-**Propósito:** Define el diseño visual del PDF con formato profesional de 2 páginas.
-
-**Estructura HTML con Jinja2:**
-
-| Sección | Descripción |
-|---------|-------------|
-| **Página 1** | Encabezado corporativo, datos del candidato, perfil determinado, mapa de competencias (gráfico radar) |
-| **Página 2** | Análisis dinámico con bloques generados por IA, matriz de riesgos (Puntos Críticos y Catalizadores dinámicos) |
-
-**Variables de Jinja2 usadas:**
-```html
-{{ nombre_candidato }}        <!-- Nombre del candidato -->
-{{ titulo_perfil }}            <!-- Clasificación (ej: Perfil Analítico) -->
-{{ desc_perfil }}              <!-- Descripción del perfil -->
-{{ titulo_recom }}             <!-- Veredicto (ej: PROMOCIÓN DIRECTA) -->
-{{ analisis_bloque_1 }}        <!-- Fortalezas (IA) -->
-{{ analisis_bloque_2 }}        <!-- Liderazgo (IA) -->
-{{ analisis_bloque_3 }}        <!-- Veredicto Final (IA) -->
-{{ imagen_radar_base64 }}      <!-- Gráfico radar codificado -->
-{{ puntos_criticos }}          <!-- Lista dinámica de puntos de atención -->
-{{ catalizadores_crecimiento }} <!-- Lista dinámica de catalizadores -->
-```
-
-**Tecnologías usadas:**
-- Tailwind CSS (CDN) para estilos
-- Google Fonts (Roboto)
-- Playwright para renderizado PDF
 
 ---
 
-### 2.3 diccionario_perfiles.json (Base de Conocimiento)
+## 3. Flujo de Ejecución
 
-**Propósito:** Define los perfiles de clasificación y sus pesos para la decisión automática.
-
-**Estructura del JSON:**
-
-```json
-{
-  "metadata": { ... },           // Info de versión
-  "perfiles": {
-    "analítico": {
-      "id": "analítico",
-      "nombre": "Perfil Analítico",
-      "descripcion": "Usuario que sobresale en análisis...",
-      "pesos_clasificacion": {
-        "atención_detalle": 0.70,   // Peso mayor para este perfil
-        "adaptabilidad": 0.10,
-        "trabajo_equipo": 0.10,
-        "tolerancia_estrés": 0.05,
-        "liderazgo": 0.05
-      },
-      "frases_contextuales": { ... },  // Textos predefinidos
-      "planes_accion": { ... }         // Planes según veredicto
-    },
-    "dinámico": { ... },
-    "equilibrio": { ... },
-    "lider": { ... }
-  }
-}
-```
-
-**Perfiles definidos:**
-1. **analítico** - Alta atención al detalle, prefieres datos sobre intuición
-2. **dinámico** - Versátil, adaptable, orientado a resultados rápidos
-3. **equilibrio** - Buen balance entre todas las dimensiones
-4. **lider** - Alta capacidad de liderazgo y trabajo en equipo
+1. **Carga**: Se parsea el archivo JSON.
+2. **Análisis**: Se calculan los percentiles comparando al usuario con su equipo (contextualización).
+3. **Generación IA**: Se consulta a Groq para:
+   - Análisis de Fortalezas y Liderazgo.
+   - Puntos Críticos y Catalizadores de Crecimiento.
+   - Alerta de Riesgo (Burnout/Fuga de talento).
+4. **Renderizado**: Se generan los gráficos con Matplotlib y se inyectan en las plantillas.
+5. **Exportación**: Se guardan los resultados en `Salida_PDF/` y `Salida_Excel/`.
 
 ---
 
-### 2.4 Datos_Entrada_Prisma.xlsx (Archivo de Entrada)
+## 4. Tecnologías Clave
 
-**Propósito:** Hoja de cálculo con los candidatos a evaluar.
-
-**Columnas:**
-| Columna | Descripción |
-|---------|-------------|
-| Nombre | Nombre completo del candidato |
-| Liderazgo | Score 0-100 |
-| Trabajo en Equipo | Score 0-100 |
-| Adaptabilidad | Score 0-100 |
-| Atención al Detalle | Score 0-100 |
-| Tolerancia Estrés | Score 0-100 |
-| Codigo_Cluster | (No usado activamente, el motor lo calcula) |
-| Codigo_Recomendacion | (No usado activamente) |
-
-**Ejemplo de datos:**
-```
-Elena García    → L:45  Eq:85  Adp:90  Det:95  Est:60
-Juan Pérez      → L:70  Eq:60  Adp:50  Det:40  Est:80
-Marta Ruiz      → L:90  Eq:95  Adp:85  Det:70  Est:75
-Carlos Lyon     → L:30  Eq:40  Adp:60  Det:85  Est:90
-Sofía Marín     → L:60  Eq:80  Adp:75  Det:65  Est:55
-```
+| Tecnología | Propósito |
+| :--- | :--- |
+| **Groq (Llama 3)** | Motor de narrativa y razonamiento ultra-rápido. |
+| **Playwright** | Generación de PDFs de alta fidelidad desde HTML. |
+| **Matplotlib** | Generación de gráficos analíticos (Radar, Barras, Scatter). |
+| **Openpyxl** | Manipulación de plantillas Excel corporativas. |
+| **Pydantic v2** | Validación estricta de la estructura del JSON. |
 
 ---
 
-## 3. Flujo de Ejecución Completo
+## 5. Instrucciones de Uso
 
-### Paso 1: Lectura de Excel
-```python
-# En ejecutar_batch_excel()
-wb = openpyxl.load_workbook("Datos_Entrada_Prisma.xlsx")
-hoja = wb.active
-for fila in hoja.iter_rows(min_row=2, values_only=True):
-    # fila = (Nombre, Liderazgo, TrabajoEquipo, Adaptabilidad, AtencionDetalle, ToleranciaEstres)
-```
-
-### Paso 2: Clasificación del Perfil
-```python
-# Best Fit clásico: multiplicar scores por pesos del perfil
-# Si avg_score está entre 50-75, consultar IA para confirmar/cambiar perfil
-cluster = clasificador.consultar_ia_zona_gris(features, mejor_perfil)
-```
-
-### Paso 3: Generación de Contenido IA
-```python
-# Groq genera texto personalizado para cada candidato
-bloques = generador.generar_analisis_bloques(usuario, perfil, score)
-puntos_criticos = generador.generar_puntos_criticos(usuario, features, perfil, score)
-catalizadores = generador.generar_catalizadores_crecimiento(usuario, features, perfil, score)
-```
-
-### Paso 4: Renderizado HTML
-```python
-html = template.render(
-    nombre_candidato=usuario.nombre,
-    puntos_criticos=puntos_criticos,           # ← Ahora dinámico
-    catalizadores_crecimiento=catalizadores    # ← Ahora dinámico
-)
-```
-
-### Paso 5: Generación PDF
-```python
-page = browser.new_page()
-page.set_content(html_final)
-page.pdf(path="Informe_Nombre.pdf", format="A4")
-```
-
----
-
-## 4. Mejoras Recientes (v4.2 PRO)
-
-Se han añadido dos nuevos métodos de generación dinámica en [`motor_prisma.py`](_3Proyecto_PrismaHR/motor_prisma.py:175):
-
-1. **Puntos de Atención Crítica** → Analiza las dimensiones más bajas del candidato y genera recomendaciones específicas de mejora
-2. **Catalizadores de Crecimiento** → Identifica las dimensiones más altas y genera oportunidades de desarrollo
-
-Ambos contenidos ahora se renderizan dinámicamente en la **segunda página** del PDF en lugar de tener texto estático.
-
----
-
-## 5. Cómo Ejecutar el Sistema
+> [!TIP]
+> Asegúrate de tener configurado tu archivo `.env` con la clave `GROQ_API_KEY`.
 
 ```bash
-cd _3Proyecto_PrismaHR
+# Ejecutar el procesamiento por lotes desde el JSON
 python motor_prisma.py
 ```
 
-El sistema procesará todos los candidatos del Excel y generará los PDFs en la carpeta `Salida_PDF/`.
+El sistema detectará automáticamente los datos en `datos_empresa.json` y generará un informe PDF e informe Excel para cada persona, además de un consolidado para el equipo.

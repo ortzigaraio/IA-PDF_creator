@@ -132,8 +132,11 @@ Funciones puras que retornan **bytes PNG**:
 ### 3.8 Excel Individual (Sistema Híbrido de Plantillas en V6)
 El **Proyecto 6** introduce un gran cambio en la generación de Excels respecto a la V5: el paso de una generación 100% programática a un **sistema híbrido basado en plantillas**.
 
-* **En Proyecto 5**: El código construía el Excel desde cero celda por celda (`src/excel/individual.py`).
-* **En Proyecto 6**: Se usa un archivo base (`plantilla_excel.xlsx` generado mediante `generar_plantilla.py`). El script `motor_prisma.py` carga esta plantilla y busca **marcadores de texto dinámicos** (ej. `[CHART_RADAR]`, `[LOGO_EMPRESA]`, `[VAL1]`) para inyectar datos y gráficos (`matplotlib`) generados al vuelo. Esto permite que el área de RRHH o diseño pueda modificar colores y layouts en el Excel sin tocar código Python.
+> [!NOTE]
+> **En Proyecto 5**: El código construía el Excel desde cero celda por celda (`src/excel/individual.py`).
+>
+> **En Proyecto 6**: Se usa un archivo base (`plantilla_excel.xlsx` generado mediante `generar_plantilla.py`). El script `motor_prisma.py` carga esta plantilla y busca **marcadores de texto dinámicos** (ej. `[CHART_RADAR]`, `[LOGO_EMPRESA]`, `[VAL1]`) para inyectar datos y gráficos (`matplotlib`) generados al vuelo. Esto permite que el área de RRHH o diseño pueda modificar colores y layouts en el Excel sin tocar código Python.
+
 
 Las 5 hojas principales generadas (o rellenadas desde la plantilla) son:
 1. **Dashboard**: KPIs + gráficos embebidos (Radar, Barras, Scatter, Coxcomb).
@@ -240,8 +243,12 @@ Mantiene el reporte maestro del equipo con:
 
 ## 5. Consideraciones Técnicas y Limitaciones Conocidas
 
-- **Integración de Logos en Excel**: El sistema intenta inyectar dinámicamente el logo de la empresa (`logo_url` del JSON) en la etiqueta `[LOGO_EMPRESA]` del Excel. Es **muy recomendable** alojar estas imágenes en servidores directos (S3, Imgur, hosting propio). Algunas URLs públicas (como las de Wikimedia/Wikipedia) devuelven un error HTTP 400 al intentar descargarlas mediante `urllib`. El sistema captura el error y continúa sin interrumpirse, pero el logo no se renderizará en el Excel.
-- **Rutas y Modulos**: En la V6, `motor_prisma.py` actúa como orquestador central y maneja la lógica de plantillas de Excel, reemplazando algunas partes de `src/main.py`.
+> [!WARNING]
+> **Integración de Logos en Excel**: El sistema intenta inyectar dinámicamente el logo de la empresa (`logo_url` del JSON) en la etiqueta `[LOGO_EMPRESA]` del Excel. Es **muy recomendable** alojar estas imágenes en servidores directos (S3, Imgur, hosting propio). Algunas URLs públicas (como las de Wikimedia/Wikipedia) devuelven un error HTTP 400 al intentar descargarlas mediante `urllib`. El sistema captura el error y continúa sin interrumpirse, pero el logo no se renderizará en el Excel.
+
+> [!NOTE]
+> **Rutas y Modulos**: En la V6, `motor_prisma.py` actúa como orquestador central y maneja la lógica de plantillas de Excel, reemplazando algunas partes de `src/main.py`.
+
 
 ---
 
@@ -282,45 +289,44 @@ _6Proyecto_PrismaHR_Refactor/
 ```json
 {
   "empresas": {
-    "EMP001": {
-      "info": {
-        "nombre": "TechCorp",
-        "sector": "Tecnología",
-        "plantilla": {
-          "color_primario": "#1e40af",
-          "color_acento": "#f59e0b",
-          "logo_url": "https://url-del-logo.com/logo.png"
-        },
-        "pesos_perfil_objetivo": {
-          "adaptabilidad": 8,
-          "comunicación": 7,
-          "creatividad": 6,
-          "disciplina": 9,
-          "empatía": 7,
-          "iniciativa": 8,
-          "resiliencia": 7
-        }
+    "google": {
+      "nombre": "Google",
+      "sector": "People Operations",
+      "pesos_perfil_objetivo": {
+        "adaptabilidad": 9,
+        "comunicación": 8,
+        "creatividad": 10,
+        "disciplina": 7,
+        "empatía": 8,
+        "iniciativa": 9,
+        "resiliencia": 8
+      },
+      "plantilla": {
+        "color_primario": "#4285F4",
+        "color_acento": "#FBBC05",
+        "logo_url": "https://url-del-logo.com/logo.png"
       },
       "clientes": [
         {
-          "id": "C001",
-          "nombre": "Juan Pérez",
+          "usuario_id": "GGL-01",
+          "nombre": "Sundar P.",
           "dimensiones": {
-            "adaptabilidad": 85,
-            "comunicacion": 78,
-            "creatividad": 65,
+            "adaptabilidad": 95,
+            "comunicación": 90,
+            "creatividad": 85,
             "disciplina": 90,
-            "empatia": 72,
-            "iniciativa": 80,
-            "resiliencia": 75
+            "empatía": 82,
+            "iniciativa": 85,
+            "resiliencia": 90
           },
-          "frases_predeterminadas": ["Lideró proyecto X"]
+          "frases_predeterminadas": ["Lideró la transición a AI-first"]
         }
       ]
     }
   }
 }
 ```
+
 
 ---
 

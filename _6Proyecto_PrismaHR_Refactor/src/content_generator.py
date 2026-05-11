@@ -57,13 +57,22 @@ class ContentGenerator:
         )
 
         return ContenidoModel(
-            analisis_bloques=raw_bloques,
-            descripcion_recom=raw_desc,
-            fortalezas=raw_fortalezas,
-            puntos_criticos=raw_puntos,
-            catalizadores_crecimiento=raw_catalizadores,
-            alerta_riesgo=raw_alerta,
+            analisis_bloques=[self._clean_text(b) for b in raw_bloques],
+            descripcion_recom=self._clean_text(raw_desc),
+            fortalezas=[self._clean_text(f) for f in raw_fortalezas],
+            puntos_criticos=[self._clean_text(p) for p in raw_puntos],
+            catalizadores_crecimiento=[self._clean_text(c) for c in raw_catalizadores],
+            alerta_riesgo=self._clean_text(raw_alerta),
         )
+
+    def _clean_text(self, text: str) -> str:
+        """Elimina caracteres de Markdown para mantener estilo uniforme."""
+        import re
+        # Quitar etiquetas HTML
+        text = re.sub(r'<[^>]*>', '', text)
+        # Quitar negritas, cursivas, encabezados y listas
+        text = re.sub(r'[*_#~`]', '', text)
+        return text.strip()
 
     # ------------------------------------------------------------------
     # Generadores individuales (privados)
@@ -78,7 +87,8 @@ class ContentGenerator:
         prompt = (
             f"Genera 3 bloques de análisis para {nombre} ({empresa_id}) con rating {score}/100. "
             "Bloque 1: Fortalezas. Bloque 2: Liderazgo. Bloque 3: Veredicto Final. "
-            "Cada bloque debe tener exactamente 2 oraciones potentes. Separa los bloques con '###'."
+            "Cada bloque debe tener exactamente 2 oraciones potentes. Separa los bloques con '###'. "
+            "IMPORTANTE: Responde en TEXTO PLANO. Prohibido usar negritas (**), encabezados (#) o HTML (<b>)."
         )
         if frases:
             prompt += (
@@ -96,7 +106,8 @@ class ContentGenerator:
     async def _descripcion(self, nombre: str, empresa_id: str, score: float) -> str:
         prompt = (
             f"Genera una 'Justificación de Dictamen' muy breve (máx 2-3 frases) "
-            f"para {nombre} ({empresa_id}) con score {score}."
+            f"para {nombre} ({empresa_id}) con score {score}. "
+            "RESPONDE SOLO EN TEXTO PLANO, SIN FORMATO NI NEGRITAS."
         )
         try:
             return await self.ai.call_async(prompt, settings.GROQ_MAX_TOKENS_CORTO)
@@ -104,7 +115,10 @@ class ContentGenerator:
             return "Consolidar rol actual mediante planes de formación continua."
 
     async def _fortalezas(self, empresa_id: str) -> List[str]:
-        prompt = f"Lista 3 fortalezas clave para un perfil {empresa_id}. Solo nombres, una por línea."
+        prompt = (
+            f"Lista 3 fortalezas clave para un perfil {empresa_id}. Solo nombres, una por línea. "
+            "SOLO TEXTO PLANO."
+        )
         try:
             raw = await self.ai.call_async(prompt, settings.GROQ_MAX_TOKENS_CORTO)
             return [l.strip().lstrip("-•*").strip() for l in raw.split("\n") if l.strip()]
@@ -124,7 +138,7 @@ class ContentGenerator:
             f"Creatividad:{d.creatividad}%, Disciplina:{d.disciplina}%, Empatía:{d.empatia}%, "
             f"Iniciativa:{d.iniciativa}%, Resiliencia:{d.resiliencia}%. "
             "Genera exactamente 2 puntos de atención crítica. "
-            "Una frase corta por línea, sin numeración ni guiones."
+            "Una frase corta por línea, sin numeración ni guiones. SOLO TEXTO PLANO."
         )
         try:
             raw = await self.ai.call_async(prompt, settings.GROQ_MAX_TOKENS_MEDIO)
@@ -152,7 +166,7 @@ class ContentGenerator:
             f"Dimensiones — Adaptabilidad:{d.adaptabilidad}%, Comunicación:{d.comunicacion}%, "
             f"Creatividad:{d.creatividad}%, Disciplina:{d.disciplina}%, Empatía:{d.empatia}%, "
             f"Iniciativa:{d.iniciativa}%, Resiliencia:{d.resiliencia}%. "
-            "Orientados a resultado de negocio. Una frase impactante por línea, sin numeración."
+            "Orientados a resultado de negocio. Una frase impactante por línea, sin numeración. SOLO TEXTO PLANO."
         )
         try:
             raw = await self.ai.call_async(prompt, settings.GROQ_MAX_TOKENS_MEDIO)
@@ -180,7 +194,7 @@ class ContentGenerator:
         )
         if frases:
             prompt += f" Contexto: '{frases}'."
-        prompt += " Responde SOLO con: 'RIESGO BAJO:', 'RIESGO MEDIO:' o 'RIESGO ALTO:' + justificación breve."
+        prompt += " Responde SOLO con: 'RIESGO BAJO:', 'RIESGO MEDIO:' o 'RIESGO ALTO:' + justificación breve. SIN NEGRITAS."
         try:
             return await self.ai.call_async(prompt, settings.GROQ_MAX_TOKENS_CORTO)
         except Exception:

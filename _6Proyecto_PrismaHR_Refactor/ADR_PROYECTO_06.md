@@ -14,10 +14,12 @@ A continuación, se documentan y razonan las decisiones tecnológicas clave toma
 
 ## 2. Decisión de Lenguaje y Ecosistema: Python
 
-### 🟢 ¿Por qué Python?
-Se eligió Python como el lenguaje base para el backend y el motor de procesamiento.
-- **Análisis de la decisión:** Es la decisión **ideal y lógica**. El proyecto es fundamentalmente de "Procesamiento de Datos" e "Inteligencia Artificial". Python domina absolutamente en ambos campos. Librerías como Pydantic, Matplotlib y las integraciones oficiales con APIs de IA (Groq/OpenAI) son de primera clase. 
-- **Alternativas descartadas:** Node.js (fuerte en asincronía web, pero débil y con menos madurez en librerías de generación de gráficos matemáticos y manipulación de datos pesados).
+### ¿Por qué Python?
+> [!NOTE]
+> Se eligió Python como el lenguaje base para el backend y el motor de procesamiento.
+> **Análisis de la decisión:** Es la decisión **ideal y lógica**. El proyecto es fundamentalmente de "Procesamiento de Datos" e "Inteligencia Artificial". Python domina absolutamente en ambos campos. Librerías como Pydantic, Matplotlib y las integraciones oficiales con APIs de IA (Groq/OpenAI) son de primera clase. 
+> **Alternativas descartadas:** Node.js (fuerte en asincronía web, pero débil y con menos madurez en librerías de generación de gráficos matemáticos y manipulación de datos pesados).
+
 
 ---
 
@@ -35,11 +37,14 @@ El motor narrativo del proyecto delega a una Inteligencia Artificial la redacci�
 
 ## 4. Decisión de Reportes (Excel): Generación Híbrida con Plantillas (openpyxl)
 
-### 🟢 El Reto del Proyecto 5 vs Proyecto 6
-En el Proyecto 5, los Excels se generaban **100% de forma programática**. El código definía dónde iba cada borde, cada color (`PatternFill`) y cada texto. Esto provocaba que cualquier cambio de diseño corporativo implicara tocar código Python.
+### El Reto del Proyecto 5 vs Proyecto 6
+> [!NOTE]
+> En el Proyecto 5, los Excels se generaban **100% de forma programática**. El código definía dónde iba cada borde, cada color (`PatternFill`) y cada texto. Esto provocaba que cualquier cambio de diseño corporativo implicara tocar código Python.
 
-### 🟢 La Solución del Proyecto 6 (Plantillas + Marcadores)
-Se introdujo una plantilla base (`plantilla_excel.xlsx`) y marcadores de texto (ej. `[CHART_RADAR]`, `[VALOR_1]`). El script abre esta plantilla, busca el marcador, lo borra y en esas coordenadas exactas inyecta gráficos generados al vuelo e información del candidato.
+### La Solución del Proyecto 6 (Plantillas + Marcadores)
+> [!TIP]
+> Se introdujo una plantilla base (`plantilla_excel.xlsx`) y marcadores de texto (ej. `[CHART_RADAR]`, `[VALOR_1]`). El script abre esta plantilla, busca el marcador, lo borra y en esas coordenadas exactas inyecta gráficos generados al vuelo e información del candidato.
+
 
 - **Análisis de la decisión:** Es la **arquitectura ideal para escalabilidad comercial**. 
     - **RRHH como dueños del diseño:** Permite que Recursos Humanos abra la plantilla en Excel, cambie el logo, mueva las columnas y cambie las fuentes sin saber programar. Python simplemente inyecta la "carga útil" (datos y gráficos) donde ellos le indiquen.
@@ -49,19 +54,21 @@ Se introdujo una plantilla base (`plantilla_excel.xlsx`) y marcadores de texto (
 
 ## 5. Decisión de Generación PDF: Jinja2 + Playwright
 
-### 🟢 ¿Por qué HTML-to-PDF vía un Navegador Headless?
-En lugar de usar librerías nativas de PDF en Python como `ReportLab` o `FPDF`.
+### ¿Por qué HTML-to-PDF vía un Navegador Headless?
+> [!TIP]
+> Esta es la **estrategia definitiva moderna** para reportes visuales de alta fidelidad.
+> - **ReportLab/FPDF** requieren programar coordenadas absolutas X/Y. Es doloroso y difícil de mantener.
+> - **Jinja2 + Playwright:** Permite diseñar reportes preciosos con HTML/CSS. Playwright simplemente "imprime" esta web a un PDF A4 perfecto.
 
-- **Análisis de la decisión:** Esta es la **estrategia definitiva moderna** para reportes visuales de alta fidelidad.
-    - **ReportLab/FPDF** requieren programar coordenadas absolutas X/Y para pintar rectángulos y texto. Es doloroso, muy propenso a errores y extremadamente difícil de mantener.
-    - **Jinja2 + Playwright:** Usar HTML/CSS (Jinja2) permite diseñar reportes preciosos, responsivos, y con sombras, degradados o tipografías de Google Web Fonts. Playwright (Chromium) simplemente "imprime" esta web a un PDF A4 perfecto. Si queremos cambiar el diseño del PDF, contratamos a un diseñador web junior, no a un experto en Python. Es el flujo de trabajo ideal.
 
 ---
 
 ## 6. Decisión de Gráficos Analíticos: Matplotlib
 
-### 🟢 Generación en Memoria (Bytes)
-Para incrustar gráficos complejos (Radios, Dispersiones, Heatmaps) dentro del PDF y Excel, el sistema usa `matplotlib`.
+### Generación en Memoria (Bytes)
+> [!NOTE]
+> Para incrustar gráficos complejos (Radios, Dispersiones, Heatmaps) dentro del PDF y Excel, el sistema usa `matplotlib`.
+
 
 - **Análisis de la decisión:** Ideal por su versatilidad matemática. A diferencia de bibliotecas interactivas como Plotly o Echarts (ideales para dashboards web interactivos), PrismaHR necesita **imágenes estáticas** (PNG) renderizadas por el servidor para "pegarlas" literalmente en las celdas de un Excel estático o en un documento PDF. Matplotlib genera PNGs limpios en buffer de memoria (`BytesIO`) sin necesidad de guardar archivos residuales en disco (salvo cuando se usa debug), optimizando la I/O del servidor.
 
@@ -69,10 +76,10 @@ Para incrustar gráficos complejos (Radios, Dispersiones, Heatmaps) dentro del P
 
 ## 7. Decisión Estructural y de Validaciones: Pydantic v2
 
-### 🟢 Validación de Datos
-El JSON de entrada se valida automáticamente y se parsea en modelos orientados a objetos.
+### Validación de Datos
+> [!IMPORTANT]
+> El JSON de entrada se valida automáticamente y se parsea en modelos orientados a objetos usando **Pydantic v2**.
 
-- **Análisis de la decisión:** **Imprescindible**. Pydantic asegura que si el sistema recibe un `string` donde se esperaba un score numérico de `resiliencia`, el error se capta de inmediato, en el límite del sistema, en lugar de arrastrar un error matemático silencioso al cálculo de la IA o de Matplotlib.
 
 ---
 

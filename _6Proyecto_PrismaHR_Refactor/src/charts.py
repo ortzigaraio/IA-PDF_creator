@@ -69,8 +69,9 @@ def radar_bytes(
     color_objetivo: str = "#f59e0b",
 ) -> bytes:
     etiquetas = list(dimensiones.keys())
-    valores = list(dimensiones.values())
+    valores = [dimensiones[k] for k in etiquetas]
     angulos = np.linspace(0, 2 * np.pi, len(etiquetas), endpoint=False).tolist()
+    
     valores_c = valores + valores[:1]
     angulos_c = angulos + angulos[:1]
 
@@ -78,23 +79,31 @@ def radar_bytes(
     fig.patch.set_facecolor("white")
     ax.set_facecolor("white")
 
-    ax.fill(angulos_c, valores_c, color=color_usuario, alpha=0.35)
-    ax.plot(angulos_c, valores_c, color=color_usuario, linewidth=2, label="Usuario")
-
-    if dimensiones_objetivo:
-        vals_o = list(dimensiones_objetivo.values()) + [list(dimensiones_objetivo.values())[0]]
-        ax.plot(angulos_c, vals_o, color=color_objetivo, linewidth=2, linestyle="--", label="Objetivo")
-        ax.fill(angulos_c, vals_o, color=color_objetivo, alpha=0.15)
-
-    ax.set_yticklabels([])
-    ax.set_xticks(angulos)
-    ax.set_xticklabels(etiquetas, fontsize=8, color="#4b5563")
-    ax.grid(True, color="#d1d5db", linewidth=0.5)
+    # Escala 0-100 visible
     ax.set_ylim(0, 100)
-    if dimensiones_objetivo:
-        ax.legend(loc="upper right", bbox_to_anchor=(1.3, 1.1), fontsize=8)
+    ax.set_yticks([20, 40, 60, 80, 100])
+    ax.set_yticklabels(["20", "40", "60", "80", "100"], fontsize=7, color="gray")
 
-    return _fig_to_bytes(fig, dpi=100)
+    # Perfil Candidato
+    ax.fill(angulos_c, valores_c, color=color_usuario, alpha=0.3)
+    ax.plot(angulos_c, valores_c, color=color_usuario, linewidth=3, label="Candidato")
+
+    # Perfil Objetivo (Amarillo/Acento)
+    if dimensiones_objetivo:
+        # Asegurar mismo orden que etiquetas
+        vals_o = [dimensiones_objetivo.get(k, 0.0) for k in etiquetas]
+        vals_o_c = vals_o + vals_o[:1]
+        ax.plot(angulos_c, vals_o_c, color=color_objetivo, linewidth=3, linestyle="-", label="Objetivo", alpha=0.8)
+        ax.fill(angulos_c, vals_o_c, color=color_objetivo, alpha=0.1)
+
+    ax.set_xticks(angulos)
+    ax.set_xticklabels(etiquetas, fontsize=9, color="#374151", fontweight='bold')
+    ax.grid(True, color="#d1d5db", linewidth=0.5, linestyle="--")
+    
+    if dimensiones_objetivo:
+        ax.legend(loc="upper right", bbox_to_anchor=(1.3, 1.1), fontsize=9, frameon=True)
+
+    return _fig_to_bytes(fig, dpi=120)
 
 
 # ------------------------------------------------------------------
@@ -103,9 +112,20 @@ def radar_bytes(
 def radar_base64(
     dimensiones: Dict[str, float],
     dimensiones_objetivo: Optional[Dict[str, float]] = None,
+    color_usuario: str = "#1e40af",
+    color_objetivo: str = "#f59e0b",
 ) -> str:
     import base64
-    return base64.b64encode(radar_bytes(dimensiones, dimensiones_objetivo)).decode("utf-8")
+    return base64.b64encode(radar_bytes(dimensiones, dimensiones_objetivo, color_usuario, color_objetivo)).decode("utf-8")
+
+
+def image_to_base64(path: str) -> str:
+    """Convierte una imagen local en una cadena Base64."""
+    import base64
+    if not os.path.exists(path):
+        return ""
+    with open(path, "rb") as f:
+        return base64.b64encode(f.read()).decode("utf-8")
 
 
 # ------------------------------------------------------------------

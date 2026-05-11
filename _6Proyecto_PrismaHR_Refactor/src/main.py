@@ -9,7 +9,7 @@ import logging
 import os
 from typing import Dict, List
 
-from playwright.sync_api import sync_playwright
+from playwright.async_api import async_playwright
 from tqdm import tqdm
 
 from src.ai_client import AIClient
@@ -54,17 +54,18 @@ class PrismaEngine:
         asyncio.run(self._process_all(datos_completos))
 
     async def _process_all(self, datos_completos: Dict):
-        """Itera empresas/clientes usando Playwright y asyncio."""
+        """Itera empresas/clientes usando Playwright asíncrono."""
         os.makedirs(settings.OUTPUT_PDF_DIR, exist_ok=True)
         os.makedirs(settings.OUTPUT_EXCEL_DIR, exist_ok=True)
 
-        with sync_playwright() as p:
-            browser = p.chromium.launch()
+        async with async_playwright() as p:
+            browser = await p.chromium.launch()
 
             for api_empresa_id, data_empresa in datos_completos.get("empresas", {}).items():
-                print(f"\\n[{api_empresa_id}] Analizando clientes...")
-                # 1. Parse EmpresaInfo
-                empresa_info = EmpresaInfo(**data_empresa.get("info", {}))
+                print(f"\n[{api_empresa_id}] Analizando clientes...")
+                # 1. Parse EmpresaInfo (usamos los datos directos de la empresa exceptuando la lista de clientes)
+                empresa_data = {k: v for k, v in data_empresa.items() if k != "clientes"}
+                empresa_info = EmpresaInfo(**empresa_data)
                 
                 clientes_raw = data_empresa.get("clientes", [])
                 if not clientes_raw:
@@ -87,8 +88,6 @@ class PrismaEngine:
                 for cliente_raw in tqdm(clientes_raw, desc="Generando reportes", unit="usr"):
                     # 3. Parse Usuario
                     dim_data = cliente_raw.get("dimensiones", {})
-                    # Forzar compatibilidad con tildes desde JSON via dict update si es estrictamente necesario,
-                    # Pydantic v2 aliases se encargará
                     usuario = UsuarioModel(
                         usuario_id=cliente_raw.get("id", "U00"),
                         nombre=cliente_raw.get("nombre", "Sin Nombre"),
@@ -120,7 +119,7 @@ class PrismaEngine:
                     )
 
                     # 7. Exports
-                    self.pdf_gen.generate_pdf(browser, usuario, resultado, empresa_info)
+                    await self.pdf_gen.generate_pdf(browser, usuario, resultado, empresa_info)
                     generar_excel_individual(usuario, resultado, empresa_info)
 
                     # 8. Acumulador para consolidado
@@ -136,4 +135,4 @@ class PrismaEngine:
                     path = generar_excel_consolidado_equipo(equipo_items, api_empresa_id)
                     print(f"MAESTRO GENERADO: {path}")
 
-            browser.close()
+            await browser.close()
