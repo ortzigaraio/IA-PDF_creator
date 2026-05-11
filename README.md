@@ -1,6 +1,6 @@
-# Documentación Técnica del Sistema PrismaHR Refactor (v6.0)
+# Documentación Técnica del IA-pdf-creator(v6.0)
 
-Este documento describe la arquitectura y el funcionamiento del motor **PrismaHR**, un sistema de evaluación de talento impulsado por IA que genera informes ejecutivos en PDF y Excel.
+Este documento describe la arquitectura y el funcionamiento del motor , un sistema de evaluación de talento impulsado por IA que genera informes ejecutivos en PDF y Excel.
 
 ## 1. Resumen de la Arquitectura
 El sistema utiliza un enfoque modular y asíncrono para procesar grandes volúmenes de datos con una latencia mínima.
