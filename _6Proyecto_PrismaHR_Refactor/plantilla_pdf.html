@@ -12,6 +12,7 @@
             --color-primario: {{ color_primario | default('#1e40af') }};
             --color-secundario: {{ color_secundario | default('#3b82f6') }};
             --color-acento: {{ color_acento | default('#f59e0b') }};
+            --logo-height: {{ logo_height | default(40) }}px;
         }
         
         @page {
@@ -62,6 +63,15 @@
             padding: 1.5rem;
             border-radius: 8px;
             flex: 1;
+            font-size: 11px !important;
+            line-height: 1.6;
+        }
+
+        .analysis-card p {
+            font-size: 11px !important;
+            font-weight: 400 !important;
+            margin: 0;
+            color: #4b5563;
         }
 
         .analysis-card h4 {
@@ -107,7 +117,9 @@
         <!-- Header -->
         <header class="flex justify-between items-end border-b-2 border-black pb-4 mb-6">
             <div class="flex items-center gap-3">
-                {% if logo_url %}
+                {% if logo_base64 %}
+                <img src="data:image/png;base64,{{ logo_base64 }}" style="height: var(--logo-height);" class="object-contain" alt="Logo">
+                {% elif logo_url %}
                 <img src="{{ logo_url }}" class="h-8 object-contain">
                 {% else %}
                 <div class="bg-empresa text-white px-2 py-1 font-black text-xs rounded">{{ nombre_empresa[:3] | upper }}</div>
@@ -117,9 +129,11 @@
                     <p class="text-[9px] font-bold text-gray-500 uppercase tracking-widest">{{ sector_empresa }}</p>
                 </div>
             </div>
-            <div class="text-right">
-                <h2 class="text-xl font-bold text-black uppercase tracking-tight">Informe Técnico de Evaluación</h2>
-                <p class="text-[10px] text-gray-500 italic">Sistema v4.2 PRO • {{ compatibilidad }}% Compatibilidad</p>
+            <div class="flex items-center gap-4">
+                <div class="text-right">
+                    <h2 class="text-xl font-bold text-black uppercase tracking-tight">Informe Técnico de Evaluación</h2>
+                    <p class="text-[10px] text-gray-500 italic">EV-System • Pro AI • {{ compatibilidad }}% Compatibilidad</p>
+                </div>
             </div>
         </header>
 
@@ -152,8 +166,7 @@
                 <div>
                     <h3 class="section-header">Determinación del Perfil</h3>
                     <div class="mb-4">
-                        <span class="bg-empresa text-white text-[8px] font-bold px-2 py-1 rounded uppercase">Clasificación
-                            Senior</span>
+                        <span class="bg-empresa text-white text-[8px] font-bold px-2 py-1 rounded uppercase">Clasificación Senior</span>
                     </div>
                     <h4 class="text-xl font-bold text-black mb-3">{{ titulo_perfil }}</h4>
                     <p class="text-[11px] text-gray-600 leading-relaxed text-justify">{{ desc_perfil }}</p>
@@ -173,7 +186,7 @@
             <div class="col-span-2">
                 <h3 class="section-header">Mapa de Competencias</h3>
                 <div class="border border-gray-100 rounded-lg p-6 bg-white shadow-sm text-center">
-                    <img src="data:image/png;base64,{{ imagen_radar_base64 }}" class="w-full h-auto mb-6" />
+                    <img src="data:image/png;base64,{{ imagen_radar_base64 }}" class="w-full h-auto mb-6" alt="Mapa de Competencias">
                     <div class="text-left">
                         <h5 class="text-[10px] font-bold text-gray-800 uppercase mb-4 tracking-wider">Atributos Clave
                             Evaluados:</h5>
@@ -184,8 +197,7 @@
                                     <span class="w-2 h-2 bg-empresa rounded-full"></span>
                                     <span>{{ item.nombre }}</span>
                                 </div>
-                                <span class="font-bold text-empresa bg-empresa/10 px-2 py-0.5 rounded">{{ item.valor
-                                    }}%</span>
+                                <span class="font-bold text-empresa bg-empresa/10 px-2 py-0.5 rounded">{{ item.valor }}%</span>
                             </li>
                             {% endfor %}
                         </ul>
@@ -196,9 +208,7 @@
 
         <!-- Footer P1 -->
         <footer class="mt-8 pt-6 border-t border-gray-100 flex justify-between items-end">
-            <div class="text-[9px] text-gray-400 font-bold uppercase tracking-tight">{{ nombre_empresa }} •
-                Página 1 de 2
-            </div>
+            <div class="text-[9px] text-gray-400 font-bold uppercase tracking-tight">{{ nombre_empresa }} • Página 1 de 2</div>
             <div class="text-[8px] text-gray-300 font-mono italic">SECURE_KEY: {{ auth_key }}</div>
         </footer>
     </div>
@@ -208,13 +218,14 @@
         <!-- Header Page 2 -->
         <header class="flex justify-between items-center border-b border-gray-200 pb-3 mb-10">
             <div class="flex items-center gap-2">
-                {% if logo_url %}
+                {% if logo_base64 %}
+                <img src="data:image/png;base64,{{ logo_base64 }}" style="height: 16px;" class="object-contain" alt="Logo">
+                {% elif logo_url %}
                 <img src="{{ logo_url }}" class="h-4 object-contain">
                 {% else %}
                 <div class="bg-empresa text-white px-1.5 py-0.5 font-black text-[10px] rounded">{{ nombre_empresa[:3] | upper }}</div>
                 {% endif %}
-                <h1 class="text-sm font-bold text-black tracking-tighter uppercase">Análisis Dinámico de Competencias
-                </h1>
+                <h1 class="text-sm font-bold text-black tracking-tighter uppercase">Análisis Dinámico de Competencias</h1>
             </div>
             <p class="text-[10px] text-gray-400 uppercase font-bold tracking-widest">{{ nombre_candidato }} • {{ nombre_empresa }}</p>
         </header>
@@ -268,7 +279,10 @@
         <footer class="mt-12 pt-8 border-t border-gray-200 flex justify-between items-end">
             <div class="space-y-6">
                 <div class="flex gap-12">
-                    <div class="w-40 border-b border-gray-300 pb-1">
+                    <div class="w-40 border-b border-gray-300 pb-1 relative">
+                        {% if firma_base64 %}
+                        <img src="data:image/png;base64,{{ firma_base64 }}" class="absolute -top-12 left-0 w-32 h-auto">
+                        {% endif %}
                         <p class="text-[8px] font-bold text-gray-400 uppercase">Firma del Evaluador</p>
                     </div>
                     <div class="w-40 border-b border-gray-300 pb-1">
@@ -278,7 +292,7 @@
                 <div class="text-[10px]">
                     <p class="font-bold text-black uppercase tracking-tighter">{{ nombre_empresa }} Technical Division
                     </p>
-                    <p class="text-gray-400 text-[8px]">Certificación v4.2 PRO • {{ sector_empresa }} • 2026</p>
+                    <p class="text-gray-400 text-[8px]">Certificación EV-System • {{ sector_empresa }} • 2026</p>
                 </div>
             </div>
             <div class="text-right">
