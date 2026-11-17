@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Informe de evaluación · {{ persona.nombre }}</title>
+<style>
+  :root {
+    --c1: {{ colores.color_primario }};
+    --c2: {{ colores.color_secundario }};
+    --c3: {{ colores.color_acento }};
+    --texto: #374151;
+    --suave: #6b7280;
+    --tenue: #9ca3af;
+    --borde: #e5e7eb;
+    --fondo: #f9fafb;
+  }
+  @page { size: A4; margin: 0; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; color: var(--texto); background: #fff;
+    font-family: "Inter", "Segoe UI", "Helvetica Neue", Arial, "Liberation Sans", sans-serif;
+    font-size: 11px; line-height: 1.55;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .pagina { width: 210mm; height: 297mm; padding: 15mm 18mm; display: flex; flex-direction: column; overflow: hidden; }
+  .salto { break-after: page; }
+  h1, h2, h3, h4, h5, p { margin: 0; }
+  .etiqueta { font-size: 8.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--tenue); }
+  .acento { color: var(--c1); }
+
+  /* Cabecera */
+  .cabecera { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 2px solid #111; padding-bottom: 12px; margin-bottom: 18px; }
+  .marca { display: flex; align-items: center; gap: 10px; }
+  .iniciales { background: var(--c1); color: #fff; font-weight: 900; font-size: 12px; padding: 5px 8px; border-radius: 4px; }
+  .marca h1 { font-size: 19px; font-weight: 900; color: #111; letter-spacing: -.02em; }
+  .titulo-informe { text-align: right; }
+  .titulo-informe h2 { font-size: 16px; font-weight: 800; color: #111; text-transform: uppercase; letter-spacing: -.01em; }
+  .titulo-informe p { font-size: 9.5px; color: var(--suave); font-style: italic; }
+
+  /* Ficha */
+  .ficha { display: grid; grid-template-columns: 2fr 1fr; border: 1px solid var(--borde); margin-bottom: 20px; }
+  .ficha > div { padding: 12px 14px; }
+  .ficha .datos { border-left: 1px solid var(--borde); background: var(--fondo); text-align: right; display: grid; gap: 6px; }
+  .ficha h3 { font-size: 22px; font-weight: 800; color: #111; margin: 2px 0; }
+  .ficha .valor { font-size: 11px; font-weight: 700; }
+
+  /* Cuerpo página 1 */
+  .cuerpo { display: grid; grid-template-columns: 3fr 2fr; gap: 26px; flex: 1; }
+  .seccion { font-size: 11px; font-weight: 800; color: var(--c1); text-transform: uppercase; letter-spacing: .05em; border-bottom: 2px solid var(--borde); padding-bottom: 6px; margin-bottom: 12px; }
+  .bloque { margin-bottom: 20px; }
+  .kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px; }
+  .kpi { border: 1px solid var(--borde); border-radius: 6px; padding: 8px 10px; }
+  .kpi .num { font-size: 20px; font-weight: 900; color: var(--c1); line-height: 1.1; }
+  .dictamen { background: color-mix(in srgb, var(--c1) 8%, white); border-left: 4px solid var(--c1); padding: 14px 16px; border-radius: 0 6px 6px 0; }
+  .dictamen h5 { font-size: 11px; font-weight: 800; color: var(--c1); text-transform: uppercase; margin-bottom: 6px; }
+  .justificado { text-align: justify; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { background: color-mix(in srgb, var(--c1) 12%, white); color: var(--c1); font-weight: 700; font-size: 10px; padding: 3px 9px; border-radius: 999px; }
+  .riesgo { display: inline-block; font-weight: 800; font-size: 10px; padding: 3px 9px; border-radius: 4px; margin-bottom: 6px; }
+  .riesgo-BAJO { background: #dcfce7; color: #166534; }
+  .riesgo-MEDIO { background: #fef3c7; color: #92400e; }
+  .riesgo-ALTO { background: #fee2e2; color: #991b1b; }
+
+  .mapa { border: 1px solid #f3f4f6; border-radius: 8px; padding: 12px; }
+  .mapa img { width: 100%; height: auto; display: block; margin-bottom: 8px; }
+  table { width: 100%; border-collapse: collapse; font-size: 10px; }
+  th { text-align: right; font-size: 8.5px; color: var(--tenue); text-transform: uppercase; font-weight: 700; padding: 3px 4px; border-bottom: 1px solid var(--borde); }
+  th:first-child, td:first-child { text-align: left; }
+  td { text-align: right; padding: 4px; border-bottom: 1px solid #f3f4f6; }
+  td.v { font-weight: 800; color: var(--c1); }
+  .pos { color: #16a34a; font-weight: 700; }
+  .neg { color: #dc2626; font-weight: 700; }
+
+  /* Pie */
+  .pie { margin-top: 14px; padding-top: 10px; border-top: 1px solid var(--borde); display: flex; justify-content: space-between; align-items: flex-end; font-size: 8.5px; color: var(--tenue); }
+  .aviso { font-size: 8px; color: var(--suave); background: var(--fondo); border: 1px solid var(--borde); border-radius: 4px; padding: 6px 8px; margin-top: 10px; }
+
+  /* Página 2 */
+  .cabecera2 { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--borde); padding-bottom: 10px; margin-bottom: 22px; }
+  .cabecera2 h1 { font-size: 13px; font-weight: 800; color: #111; text-transform: uppercase; }
+  .dos { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  .tarjeta { background: var(--fondo); border: 1px solid #f3f4f6; border-radius: 8px; padding: 16px; }
+  .tarjeta h4 { color: var(--c1); font-size: 10.5px; font-weight: 900; text-transform: uppercase; border-bottom: 1px solid var(--borde); padding-bottom: 6px; margin-bottom: 8px; }
+  .tarjeta p { color: #4b5563; }
+  .caja { border-radius: 8px; padding: 14px 16px; }
+  .caja h5 { font-size: 9.5px; font-weight: 800; text-transform: uppercase; margin-bottom: 6px; }
+  .caja ul { margin: 0; padding-left: 16px; }
+  .caja li { margin-bottom: 4px; }
+  .roja { background: #fef2f2; border: 1px solid #fee2e2; color: #7f1d1d; }
+  .roja h5 { color: #b91c1c; }
+  .verde { background: #f0fdf4; border: 1px solid #dcfce7; color: #14532d; }
+  .verde h5 { color: #15803d; }
+  .firmas { display: flex; gap: 40px; margin-bottom: 12px; }
+  .firma { width: 170px; border-bottom: 1px solid #d1d5db; padding-bottom: 3px; position: relative; height: 46px; display: flex; align-items: flex-end; }
+  .firma img { position: absolute; bottom: 14px; left: 0; width: 130px; }
+</style>
+</head>
+<body>
+
+{% macro logo(alto) -%}
+  {% if logo_uri %}<img src="{{ logo_uri }}" style="height: {{ alto }}px" alt="Logo">
+  {% else %}<span class="iniciales">{{ empresa.nombre[:3] | upper }}</span>{% endif %}
+{%- endmacro %}
+
+<!-- ============ PÁGINA 1 ============ -->
+<div class="pagina salto">
+  <header class="cabecera">
+    <div class="marca">
+      {{ logo(logo_height) }}
+      <div>
+        <h1>{{ empresa.nombre }}</h1>
+        <p class="etiqueta">{{ empresa.sector }}</p>
+      </div>
+    </div>
+    <div class="titulo-informe">
+      <h2>Informe de evaluación de competencias</h2>
+      <p>{{ ev.compatibilidad }}% de compatibilidad con el perfil objetivo</p>
+    </div>
+  </header>
+
+  <section class="ficha">
+    <div>
+      <span class="etiqueta">Persona evaluada</span>
+      <h3>{{ persona.nombre }}</h3>
+      <p style="font-size:10px;color:var(--suave);font-style:italic">{{ empresa.nombre }}{% if empresa.sector %} · {{ empresa.sector }}{% endif %}</p>
+    </div>
+    <div class="datos">
+      <div><span class="etiqueta">ID evaluación</span><br><span class="valor">{{ id_evaluacion }}</span></div>
+      <div><span class="etiqueta">Fecha de emisión</span><br><span class="valor">{{ fecha }}</span></div>
+    </div>
+  </section>
+
+  <div class="cuerpo">
+    <div>
+      <div class="bloque">
+        <h3 class="seccion">Indicadores</h3>
+        <div class="kpis">
+          <div class="kpi"><span class="etiqueta">Compatibilidad</span><div class="num">{{ ev.compatibilidad }}%</div></div>
+          <div class="kpi"><span class="etiqueta">Media</span><div class="num">{{ ev.promedio }}</div></div>
+          <div class="kpi"><span class="etiqueta">Riesgo</span><div class="num" style="font-size:15px;padding-top:4px">{{ ev.nivel_riesgo }}</div></div>
+        </div>
+      </div>
+
+      <div class="bloque">
+        <h3 class="seccion">Dictamen de gestión</h3>
+        <div class="dictamen">
+          <h5>{{ ev.veredicto }}</h5>
+          <p class="justificado">{{ n.resumen_dictamen }}</p>
+        </div>
+      </div>
+
+      <div class="bloque">
+        <h3 class="seccion">Fortalezas principales</h3>
+        <div class="chips">{% for f in fortalezas %}<span class="chip">{{ f }}</span>{% endfor %}</div>
+      </div>
+
+      <div class="bloque">
+        <h3 class="seccion">Riesgo de desgaste o salida</h3>
+        <span class="riesgo riesgo-{{ ev.nivel_riesgo }}">RIESGO {{ ev.nivel_riesgo }}</span>
+        <p class="justificado">{{ n.justificacion_riesgo }}</p>
+      </div>
+    </div>
+
+    <div>
+      <h3 class="seccion">Mapa de competencias</h3>
+      <div class="mapa">
+        <img src="{{ radar_uri }}" alt="Radar de competencias frente al perfil objetivo">
+        <table>
+          <thead><tr><th>Dimensión</th><th>Persona</th><th>Objetivo</th><th>Dif.</th></tr></thead>
+          <tbody>
+          {% for it in items %}
+            <tr>
+              <td>{{ it.nombre }}</td>
+              <td class="v">{{ it.valor }}</td>
+              <td>{{ it.objetivo }}</td>
+              <td class="{{ 'pos' if it.gap >= 0 else 'neg' }}">{{ '%+.0f' | format(it.gap) }}</td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <footer class="pie">
+    <span>{{ empresa.nombre }} · Página 1 de 2</span>
+    <span>{{ id_evaluacion }}</span>
+  </footer>
+</div>
+
+<!-- ============ PÁGINA 2 ============ -->
+<div class="pagina">
+  <header class="cabecera2">
+    <div class="marca">
+      {{ logo(16) }}
+      <h1>Análisis de competencias</h1>
+    </div>
+    <span class="etiqueta">{{ persona.nombre }} · {{ empresa.nombre }}</span>
+  </header>
+
+  <section style="flex:1">
+    <div class="dos">
+      <div class="tarjeta"><h4>Identificación de fortalezas</h4><p class="justificado">{{ n.analisis_fortalezas }}</p></div>
+      <div class="tarjeta"><h4>Potencial de liderazgo</h4><p class="justificado">{{ n.analisis_liderazgo }}</p></div>
+    </div>
+    <div class="tarjeta" style="margin-bottom:16px"><h4>Diagnóstico y recomendación final</h4><p class="justificado">{{ n.recomendacion_final }}</p></div>
+
+    <div class="dos">
+      <div class="caja roja">
+        <h5>⚠ Puntos de atención</h5>
+        <ul>{% for p in n.puntos_criticos %}<li>{{ p }}</li>{% endfor %}</ul>
+      </div>
+      <div class="caja verde">
+        <h5>✦ Catalizadores de crecimiento</h5>
+        <ul>{% for c in n.catalizadores %}<li>{{ c }}</li>{% endfor %}</ul>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="firmas">
+      <div class="firma">{% if firma_uri %}<img src="{{ firma_uri }}" alt="Firma">{% endif %}<span class="etiqueta">Firma del evaluador</span></div>
+      <div class="firma"><span class="etiqueta">Validación de la dirección</span></div>
+    </div>
+    <p class="aviso">
+      Informe orientativo. El veredicto y el nivel de riesgo se calculan con reglas fijas a partir de las puntuaciones;
+      los textos los ha redactado <strong>{{ inf.fuente_narrativa }}</strong>. Cualquier decisión sobre la persona
+      debe tomarla una persona responsable tras revisar este informe.
+    </p>
+    <div class="pie">
+      <span>{{ empresa.nombre }} · Página 2 de 2 · Fin del informe</span>
+      <span>{{ fecha }}</span>
+    </div>
+  </footer>
+</div>
+
+</body>
+</html>
