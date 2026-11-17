@@ -1,0 +1,182 @@
+{
+  "empresas": {
+    "nubetec": {
+      "nombre": "NubeTec Soluciones",
+      "sector": "Tecnología · Desarrollo de software",
+      "plantilla": {
+        "color_primario": "#1d4ed8",
+        "color_secundario": "#3b82f6",
+        "color_acento": "#f59e0b",
+        "logo_path": ""
+      },
+      "pesos_perfil_objetivo": {
+        "adaptabilidad": 9,
+        "comunicación": 8,
+        "creatividad": 9,
+        "disciplina": 7,
+        "empatía": 7,
+        "iniciativa": 9,
+        "resiliencia": 8
+      },
+      "clientes": [
+        {
+          "usuario_id": "NT-01",
+          "nombre": "Laura Gómez",
+          "dimensiones": {
+            "adaptabilidad": 92,
+            "comunicación": 85,
+            "creatividad": 90,
+            "disciplina": 74,
+            "empatía": 72,
+            "iniciativa": 93,
+            "resiliencia": 82
+          },
+          "frases_predeterminadas": [
+            "Lidera con soltura la migración de la plataforma a la nube y propone mejoras continuas.",
+            "Debería delegar más tareas operativas para centrarse en la estrategia del equipo."
+          ]
+        },
+        {
+          "usuario_id": "NT-02",
+          "nombre": "Daniel Ruiz",
+          "dimensiones": {
+            "adaptabilidad": 78,
+            "comunicación": 70,
+            "creatividad": 82,
+            "disciplina": 80,
+            "empatía": 68,
+            "iniciativa": 75,
+            "resiliencia": 76
+          },
+          "frases_predeterminadas": [
+            "Aporta ideas técnicas sólidas en las revisiones de arquitectura.",
+            "Necesita ganar confianza al presentar sus propuestas a otros departamentos."
+          ]
+        },
+        {
+          "usuario_id": "NT-03",
+          "nombre": "Marta Iglesias",
+          "dimensiones": {
+            "adaptabilidad": 70,
+            "comunicación": 62,
+            "creatividad": 60,
+            "disciplina": 88,
+            "empatía": 70,
+            "iniciativa": 58,
+            "resiliencia": 72
+          },
+          "frases_predeterminadas": [
+            "Es muy rigurosa con la calidad y la documentación del código.",
+            "Le cuesta adaptarse cuando cambian las prioridades del sprint."
+          ]
+        },
+        {
+          "usuario_id": "NT-04",
+          "nombre": "Sergio Navarro",
+          "dimensiones": {
+            "adaptabilidad": 55,
+            "comunicación": 50,
+            "creatividad": 58,
+            "disciplina": 62,
+            "empatía": 48,
+            "iniciativa": 52,
+            "resiliencia": 58
+          },
+          "frases_predeterminadas": [
+            "Cumple con las tareas asignadas, aunque con poca proactividad.",
+            "Muestra señales de cansancio en los periodos de entrega."
+          ]
+        },
+        {
+          "usuario_id": "NT-05",
+          "nombre": "Irene Castro",
+          "dimensiones": {
+            "adaptabilidad": 88,
+            "comunicación": 90,
+            "creatividad": 86,
+            "disciplina": 78,
+            "empatía": 88,
+            "iniciativa": 84,
+            "resiliencia": 62
+          },
+          "frases_predeterminadas": [
+            "Excelente comunicadora; es el enlace natural con los clientes.",
+            "Asume demasiada carga y le afecta la presión de los plazos."
+          ]
+        }
+      ]
+    },
+    "verdemar": {
+      "nombre": "Verdemar Logística",
+      "sector": "Logística · Operaciones y almacén",
+      "plantilla": {
+        "color_primario": "#047857",
+        "color_secundario": "#10b981",
+        "color_acento": "#eab308",
+        "logo_path": ""
+      },
+      "pesos_perfil_objetivo": {
+        "adaptabilidad": 7,
+        "comunicación": 7,
+        "creatividad": 5,
+        "disciplina": 10,
+        "empatía": 7,
+        "iniciativa": 7,
+        "resiliencia": 9
+      },
+      "clientes": [
+        {
+          "usuario_id": "VM-01",
+          "nombre": "Javier Ortega",
+          "dimensiones": {
+            "adaptabilidad": 74,
+            "comunicación": 72,
+            "creatividad": 55,
+            "disciplina": 96,
+            "empatía": 70,
+            "iniciativa": 74,
+            "resiliencia": 90
+          },
+          "frases_predeterminadas": [
+            "Mantiene los indicadores de puntualidad del almacén por encima del objetivo.",
+            "Podría implicar más al equipo en la planificación de turnos."
+          ]
+        },
+        {
+          "usuario_id": "VM-02",
+          "nombre": "Nuria Medina",
+          "dimensiones": {
+            "adaptabilidad": 82,
+            "comunicación": 80,
+            "creatividad": 70,
+            "disciplina": 80,
+            "empatía": 85,
+            "iniciativa": 78,
+            "resiliencia": 70
+          },
+          "frases_predeterminadas": [
+            "Gestiona muy bien los conflictos entre turnos.",
+            "Debe reforzar el seguimiento de los procedimientos de seguridad."
+          ]
+        },
+        {
+          "usuario_id": "VM-03",
+          "nombre": "Raúl Fuentes",
+          "dimensiones": {
+            "adaptabilidad": 60,
+            "comunicación": 55,
+            "creatividad": 65,
+            "disciplina": 60,
+            "empatía": 60,
+            "iniciativa": 70,
+            "resiliencia": 68
+          },
+          "frases_predeterminadas": [
+            "Propone mejoras en la ruta de reparto, aunque no siempre las documenta.",
+            "Necesita más constancia en el registro de incidencias."
+          ]
+        }
+      ]
+    }
+  }
+}

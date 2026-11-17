@@ -1,100 +1,126 @@
-# Documentación Técnica del IA-pdf-creator(v6.0)
+# PrismaHR · Generador de informes de evaluación (v7)
 
-Este documento describe la arquitectura y el funcionamiento del motor , un sistema de evaluación de talento impulsado por IA que genera informes ejecutivos en PDF y Excel.
+Lee un JSON con empresas y personas evaluadas en 7 competencias y genera:
 
-## 1. Resumen de la Arquitectura
-El sistema utiliza un enfoque modular y asíncrono para procesar grandes volúmenes de datos con una latencia mínima.
+- **Un PDF de 2 páginas por persona**: compatibilidad con el perfil objetivo, dictamen, radar, fortalezas, riesgo y análisis.
+- **Un Excel consolidado por empresa**: ranking, mapa de calor y detalle de dictámenes.
+- **Un registro de auditoría por persona** (JSON): qué datos, reglas y fuente de texto produjeron cada informe.
+
+## Cómo funciona
 
 ```mermaid
-graph TD
-    A[JSON Entrada: datos_empresa.json] --> B[motor_prisma.py]
-    B --> C[IA: Groq Llama 3.3 70B]
-    B --> D[Gráficos: Matplotlib]
-    B --> E[Plantilla HTML: Jinja2]
-    B --> F[Plantilla Excel: openpyxl]
-    E --> G[PDF Final: Playwright]
-    F --> H[Excel Final: Dashboard]
+graph LR
+    A[datos/*.json] --> B[models.py<br>validación]
+    B --> C[scoring.py<br>REGLAS: compatibilidad,<br>veredicto, riesgo,<br>fortalezas, mejoras]
+    C --> D[narrativa.py<br>IA: 1 llamada,<br>salida estructurada]
+    D -->|si falla| E[textos de plantilla]
+    C --> F[pdf.py<br>Jinja2 + Chromium]
+    D --> F
+    C --> G[excel_consolidado.py]
+    D --> G
 ```
 
-> [!IMPORTANT]
-> El sistema actual (V6) ya no utiliza archivos Excel de entrada ni el antiguo `diccionario_perfiles.json`. Ahora todo el conocimiento y los datos residen en un único archivo JSON centralizado.
+**Principio clave: las reglas deciden, la IA redacta.** El veredicto, el nivel de riesgo, las fortalezas y las áreas de mejora salen de cálculos fijos y explicables (`prismahr/scoring.py`). La IA solo convierte esas conclusiones en texto, y nunca recibe el nombre real de la persona (se usa el marcador `[NOMBRE]`).
 
----
+### Reglas actuales
 
-## 2. Componentes Principales
+| Concepto | Regla |
+| :-- | :-- |
+| Compatibilidad | `100 − media(|persona − objetivo|)`, escala 0-100 (pesos 0-10 × 10) |
+| Veredicto | ≥ 85 Promoción directa · ≥ 72 Formación técnica · ≥ 55 Consolidación · < 55 Plan de mejora |
+| Riesgo | Resiliencia < 65 → ALTO · resiliencia < 80 o empatía < 65 → MEDIO · resto → BAJO |
+| Fortalezas | Las 3 dimensiones con más puntuación |
+| Áreas de mejora | Las 2 dimensiones más por debajo del objetivo |
 
-### 2.1 motor_prisma.py
-Es el orquestador central. Sus funciones incluyen:
-- **Carga de Datos**: Lee `datos_empresa.json`.
-- **Cálculo de Compatibilidad**: Compara las dimensiones del usuario con los pesos del perfil objetivo de la empresa.
-- **Orquestación IA**: Lanza 6 peticiones asíncronas a Groq para generar el contenido narrativo.
-- **Generación Documental**: Gestiona la creación de PDFs y Excels.
-
-### 2.2 datos_empresa.json (Estructura de Datos)
-> [!NOTE]
-> Este es el núcleo de información del sistema. Define tanto la configuración de la empresa como los datos de los evaluados.
-
-**Estructura:**
-- `empresas`: Diccionario indexado por ID de empresa.
-  - `info`: Nombre, sector, colores corporativos y logo.
-  - `pesos_perfil_objetivo`: Valores 0-10 para las 7 dimensiones (Adaptabilidad, Comunicación, Creatividad, Disciplina, Empatía, Iniciativa, Resiliencia).
-  - `clientes`: Lista de personas evaluadas con sus puntuaciones (0-100) y frases de observación.
-
-### 2.3 Sistema de Plantillas Híbrido
-- **PDF**: Usa `plantilla_radar.html` con Jinja2 y Playwright. Permite diseños de alta fidelidad con CSS moderno.
-- **Excel**: Usa `plantilla_excel.xlsx`. El sistema busca marcadores de texto (ej: `[CHART_RADAR]`, `[LOGO_EMPRESA]`) e inyecta dinámicamente los gráficos y datos.
-
-### 2.4 Generación Narrativa (Las 6 Peticiones a Groq)
-El motor lanza 6 peticiones asíncronas simultáneas para transformar los datos numéricos en narrativa ejecutiva. Todas utilizan el modelo **Llama 3.3 70B**.
-
-| Petición | Datos Enviados (Input) | Contenido Generado (Output) | Destino en PDF (`plantilla_radar.html`) |
-| :--- | :--- | :--- | :--- |
-| **1. Bloques Narrativos** | Nombre, Perfil, Score y **Frases Predeterminadas**. | 3 bloques: Fortalezas, Liderazgo y Veredicto Final. | `{{ analisis_bloque_1/2/3 }}` |
-| **2. Justificación** | Nombre, Perfil y Score de compatibilidad. | Resumen ejecutivo (2-3 frases) que defiende el veredicto. | `{{ desc_recom }}` |
-| **3. Fortalezas Clave** | Perfil objetivo y dimensiones técnicas. | Lista de las 3 habilidades más destacadas del evaluado. | Listas dinámicas de la pág. 1. |
-| **4. Puntos Críticos** | Scores de las 7 dimensiones (foco en las más bajas). | 2 áreas de mejora urgente y atención prioritaria. | `{{ puntos_criticos }}` (Pág. 2) |
-| **5. Catalizadores** | Scores de las 7 dimensiones (foco en las más altas). | 2 oportunidades de crecimiento y desarrollo estratégico. | `{{ catalizadores_crecimiento }}` (Pág. 2) |
-| **6. Alerta de Riesgo** | Resiliencia, Empatía y **Frases Predeterminadas**. | Nivel de riesgo (Bajo/Medio/Alto) de burnout o fuga. | Área de Evaluación de Riesgos. |
-
-> [!IMPORTANT]
-> Las **Frases Predeterminadas** son críticas: actúan como el "ancla de verdad" para la IA, obligándola a que toda la narrativa generada sea coherente con las observaciones manuales del evaluador.
-
-
----
-
-## 3. Flujo de Ejecución
-
-1. **Carga**: Se parsea el archivo JSON.
-2. **Análisis**: Se calculan los percentiles comparando al usuario con su equipo (contextualización).
-3. **Generación IA**: Se consulta a Groq para:
-   - Análisis de Fortalezas y Liderazgo.
-   - Puntos Críticos y Catalizadores de Crecimiento.
-   - Alerta de Riesgo (Burnout/Fuga de talento).
-4. **Renderizado**: Se generan los gráficos con Matplotlib y se inyectan en las plantillas.
-5. **Exportación**: Se guardan los resultados en `Salida_PDF/` y `Salida_Excel/`.
-
----
-
-## 4. Tecnologías Clave
-
-| Tecnología | Propósito |
-| :--- | :--- |
-| **Groq (Llama 3)** | Motor de narrativa y razonamiento ultra-rápido. |
-| **Playwright** | Generación de PDFs de alta fidelidad desde HTML. |
-| **Matplotlib** | Generación de gráficos analíticos (Radar, Barras, Scatter). |
-| **Openpyxl** | Manipulación de plantillas Excel corporativas. |
-| **Pydantic v2** | Validación estricta de la estructura del JSON. |
-
----
-
-## 5. Instrucciones de Uso
-
-> [!TIP]
-> Asegúrate de tener configurado tu archivo `.env` con la clave `GROQ_API_KEY`.
+## Instalación
 
 ```bash
-# Ejecutar el procesamiento por lotes desde el JSON
-python motor_prisma.py
+python -m venv .venv
 ```
 
-El sistema detectará automáticamente los datos en `datos_empresa.json` y generará un informe PDF e informe Excel para cada persona, además de un consolidado para el equipo.
+```bash
+source .venv/bin/activate
+```
+
+```bash
+pip install -e ".[groq]"        # o [anthropic], [openai], [gemini], [todos]
+```
+
+```bash
+playwright install chromium
+```
+
+```bash
+cp .env.example .env            # y pon la clave de tu proveedor
+```
+
+## Uso
+
+```bash
+python -m prismahr
+```
+
+Opciones útiles:
+
+```bash
+python -m prismahr --datos datos/mi_empresa.json --proveedor anthropic
+```
+
+```bash
+python -m prismahr --proveedor plantillas    # sin IA y sin coste
+```
+
+Los resultados quedan en `salida/pdf`, `salida/excel` y `salida/auditoria`.
+
+## Proveedores de IA
+
+Se elige con `LLM_PROVIDER` (y opcionalmente `LLM_MODEL`) en el `.env`:
+
+| Proveedor | Modelo por defecto | Cómo garantiza el formato |
+| :-- | :-- | :-- |
+| `groq` | `llama-3.3-70b-versatile` | Modo JSON + validación Pydantic |
+| `anthropic` | `claude-opus-5-5` | Salida estructurada nativa |
+| `openai` | `gpt-5-mini` | Salida estructurada nativa |
+| `gemini` | `gemini-2.5-flash` | JSON con esquema |
+| `plantillas` | — | Textos fijos, sin IA |
+
+Si la IA falla (red, cuota, respuesta inválida tras reintentos), esa persona recibe textos de plantilla y el lote continúa. El PDF y el Excel indican siempre qué fuente redactó el texto.
+
+## Formato del JSON de entrada
+
+```json
+{
+  "empresas": {
+    "mi_empresa": {
+      "nombre": "Mi Empresa",
+      "sector": "Sector",
+      "plantilla": { "color_primario": "#1d4ed8", "color_secundario": "#3b82f6", "color_acento": "#f59e0b", "logo_path": "logo.png" },
+      "pesos_perfil_objetivo": { "adaptabilidad": 9, "comunicación": 8, "creatividad": 9, "disciplina": 7, "empatía": 7, "iniciativa": 9, "resiliencia": 8 },
+      "clientes": [
+        {
+          "usuario_id": "E-01",
+          "nombre": "Nombre Apellido",
+          "dimensiones": { "adaptabilidad": 90, "comunicación": 85, "creatividad": 80, "disciplina": 75, "empatía": 70, "iniciativa": 88, "resiliencia": 82 },
+          "frases_predeterminadas": ["Observación del evaluador que la IA usará como base."]
+        }
+      ]
+    }
+  }
+}
+```
+
+- Las 7 dimensiones son obligatorias; se aceptan con o sin tilde.
+- `logo_path` es opcional y relativo a la carpeta del JSON. Sin logo se muestran las iniciales de la empresa.
+- Puntuaciones 0-100; pesos del perfil 0-10.
+
+## Tests
+
+```bash
+pip install -e ".[dev]" && pytest
+```
+
+## Aviso legal
+
+Usar IA para evaluar a trabajadores se considera **alto riesgo** en el Reglamento Europeo de IA, y el RGPD limita las decisiones automatizadas sobre personas. Este sistema está pensado como **apoyo**: cada informe lo indica y deja un registro de auditoría, pero la decisión final debe tomarla siempre una persona.
+
+Más detalle técnico en [`docs/ADR.md`](docs/ADR.md).

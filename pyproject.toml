@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "prismahr"
+version = "7.0.0"
+description = "Informes PDF y Excel de evaluación de competencias: reglas deciden, la IA redacta."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "pydantic>=2.6",
+    "pydantic-settings>=2.2",
+    "jinja2>=3.1",
+    "matplotlib>=3.8",
+    "numpy>=1.26",
+    "openpyxl>=3.1",
+    "playwright>=1.42",
+]
+
+[project.optional-dependencies]
+groq = ["groq>=0.30"]
+anthropic = ["anthropic>=0.75"]
+openai = ["openai>=1.60"]
+gemini = ["google-genai>=1.0"]
+todos = ["prismahr[groq,anthropic,openai,gemini]"]
+dev = ["pytest>=8", "pyflakes>=3"]
+
+[project.scripts]
+prismahr = "prismahr.__main__:main"
+
+[tool.setuptools.packages.find]
+include = ["prismahr*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
